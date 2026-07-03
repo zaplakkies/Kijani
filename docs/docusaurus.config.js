@@ -38,12 +38,8 @@ const config = {
   presets: [
     [
       'classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
-        docs: {
-          sidebarPath: './sidebars.js',
-          editUrl: 'https://github.com/Ithegi/Kijani/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
+      {
+        docs: false, // disable default docs plugin
         blog: {
           showReadingTime: true,
           feedOptions: {
@@ -58,7 +54,28 @@ const config = {
         theme: {
           customCss: './src/css/custom.css',
         },
-      }),
+      },
+    ],
+  ],
+
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'software',
+        path: 'docs/software',
+        routeBasePath: 'docs/software',
+        sidebarPath: './sidebars/software.js',
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'hardware',
+        path: 'docs/hardware',
+        routeBasePath: 'docs/hardware',
+        sidebarPath: './sidebars/hardware.js',
+      },
     ],
   ],
 
@@ -68,9 +85,9 @@ const config = {
 		announcementBar: {
 			id: 'support_us', // change when you want to dismiss/reset it
 			content:
-			'🚧 This site is under active development. Expect changes. This documentation site has not been finalized. As a result, this site explains how to use Docusaurus - the documentation technology we use.',
-			backgroundColor: '#ff000d',
-			textColor: '#ffffff',
+			'🚧 This site is under active development. Expect changes.',
+			backgroundColor: '#fec901',
+			textColor: '#010000',
 			isCloseable: true,
 		},
       // Replace with your project's social card
@@ -86,10 +103,23 @@ const config = {
         },
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            to: '/',
+            label: 'Home',
             position: 'left',
-            label: 'Tutorial',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'softwareSidebar',
+            docsPluginId: 'software',
+            position: 'left',
+            label: 'Software',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'hardwareSidebar',
+            docsPluginId: 'hardware',
+            position: 'left',
+            label: 'Hardware',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
@@ -106,8 +136,29 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'Software',
+                to: '/docs/software',
+              },
+              {
+                label: 'Hardware',
+                to: '/docs/hardware',
+              },
+            ],
+          },
+          {
+            title: 'Community',
+            items: [
+              {
+                label: 'Stack Overflow',
+                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              },
+              {
+                label: 'Discord',
+                href: 'https://discordapp.com/invite/docusaurus',
+              },
+              {
+                label: 'X',
+                href: 'https://x.com/docusaurus',
               },
             ],
           },
