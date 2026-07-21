@@ -272,19 +272,53 @@ def watch_action(target, source, env):
                     # small settle delay
                     time.sleep(0.2)
 
-                    # Run deploy then append_qr_to_pdf
-                    ok = _run_pio_target(pio_exec, "deploy", dev, repo_root)
-                    if not ok:
-                        _log("deploy failed for", dev, "; skipping append_qr_to_pdf")
+                    result = env.Execute("pio run -t upload")
+                    if result != 0:
+                        print("Firmware upload failed. Exiting.")
+                        # sys.exit(result)
                     else:
-                        ok2 = _run_pio_target(pio_exec, "append_qr_to_pdf", dev, repo_root)
-                        if not ok2:
-                            _log("append_qr_to_pdf failed for", dev)
+                        time.sleep(0.2)
+
+                        result = env.Execute("pio run -t uploadfs")
+                        if result != 0:
+                            print("Filesystem upload failed. Exiting.")
+                            # sys.exit(result)
                         else:
-                            _log("Completed deploy + append_qr_to_pdf for", dev)
+                            result = _run_pio_target(pio_exec, "append_qr_to_pdf", dev, repo_root)
+                            if not result:
+                                _log("append_qr_to_pdf failed for", dev)
+                            else:
+                                _log("Completed deploy + append_qr_to_pdf for", dev)
+
+
+                    # if sys.platform != "win32":
+                    #     import subprocess
+                    #     try:
+                    #         # subprocess.run(["pkill", "-f", "esptool.py"], check=False)
+                    #         print(subprocess.run(
+                    #             ["lsof", "/dev/ttyUSB0"],
+                    #             capture_output=True,
+                    #             text=True
+                    #         ).stdout)
+                    #         # print("esptool.py process killed")
+                    #     except Exception as e:
+                    #         print(f"Error: {e}")
+                    # Run deploy then append_qr_to_pdf
+                    # ok = _run_pio_target(pio_exec, "deploy", dev, repo_root)
+                    # if not ok:
+                    #     _log("deploy failed for", dev, "; skipping append_qr_to_pdf")
+                    # else:
+                    #     ok2 = _run_pio_target(pio_exec, "append_qr_to_pdf", dev, repo_root)
+                    #     if not ok2:
+                    #         _log("append_qr_to_pdf failed for", dev)
+                    #     else:
+                    #         _log("Completed deploy + append_qr_to_pdf for", dev)
+
+                    
 
                 # update known ports after handling new ones
-                prev_ports = _list_serial_ports(filter_keywords=True)
+                # prev_ports = _list_serial_ports(filter_keywords=True)
+                prev_ports = current_ports
 
             elif removed:
                 _log("Device(s) removed:", ", ".join(sorted(removed)))

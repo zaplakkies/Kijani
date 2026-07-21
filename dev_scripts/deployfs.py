@@ -7,10 +7,10 @@ import os
 
 def deploy_filesystem(source, target, env):
     # Build frontend
-    result = env.Execute("npm --prefix frontend run build")
-    if result != 0:
-        print("Filesystem build failed. Exiting.")
-        sys.exit(result)
+    # result = env.Execute("npm --prefix frontend run build")
+    # if result != 0:
+    #     print("Filesystem build failed. Exiting.")
+    #     sys.exit(result)
 
     # Upload filesystem
     result = env.Execute("pio run -t uploadfs")

@@ -5,6 +5,7 @@ Import("env")
 import sys
 
 def deploy_firmware_and_filesystem(source, target, env):
+    
     # Upload firmware
     result = env.Execute("pio run -t upload")
     if result != 0:

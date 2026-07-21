@@ -24,10 +24,10 @@ if _scons_available:
     Import("env")
 
 # Optional imaging libraries
-try:
-    from PIL import Image, ImageDraw, ImageFont
-except Exception:
-    Image = ImageDraw = ImageFont = None
+# try:
+from PIL import Image, ImageDraw, ImageFont
+# except Exception:
+    # Image = ImageDraw = ImageFont = None
 
 try:
     import qrcode
@@ -211,10 +211,10 @@ def read_mac_from_device(port, serial_timeout=5):
         print("Serial fallback: no MAC found in output (timeout). Last 200 chars:")
         print(buffer[-200:])
     finally:
-        try:
-            ser.close()
-        except Exception:
-            pass
+        # try:
+        ser.close()
+        # except Exception:
+        #     pass
 
     return None
 
@@ -311,8 +311,8 @@ def create_qr_for_attached_device(save_png=True, out_dir=OUT_DIR):
         print("Failed to read MAC from device.")
         return (None, None)
 
-    ssid = f"Palooka_{mac.upper()}"
-    dashboard = "http://192.168.4.1/"
+    ssid = f"MootBot_{mac.upper()}".replace(":", "")
+    dashboard = "http://10.10.10.10/"
 
     img_obj = make_sticker_image_obj(ssid, dashboard)
     if img_obj is None:
