@@ -24,10 +24,10 @@ if _scons_available:
     Import("env")
 
 # Optional imaging libraries
-# try:
-from PIL import Image, ImageDraw, ImageFont
-# except Exception:
-    # Image = ImageDraw = ImageFont = None
+try:
+    from PIL import Image, ImageDraw, ImageFont
+except Exception:
+    Image = ImageDraw = ImageFont = None
 
 try:
     import qrcode
