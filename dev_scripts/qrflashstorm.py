@@ -273,6 +273,7 @@ def watch_action(target, source, env):
                     time.sleep(0.2)
 
                     result = env.Execute("pio run -t upload")
+                    # result = 0
                     if result != 0:
                         print("Firmware upload failed. Exiting.")
                         # sys.exit(result)
@@ -289,7 +290,7 @@ def watch_action(target, source, env):
                                 _log("append_qr_to_pdf failed for", dev)
                             else:
                                 _log("Completed deploy + append_qr_to_pdf for", dev)
-
+        
 
                     # if sys.platform != "win32":
                     #     import subprocess

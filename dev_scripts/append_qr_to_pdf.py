@@ -41,7 +41,7 @@ def create_pdf_page(img_pil, out_pdf: Path, index=None, cell_index=0,
                     cols=COLS, rows=ROWS, margin_cm=0.5, spacing_cm=0.2):
     page_w, page_h = portrait(A4)
     c = canvas.Canvas(str(out_pdf), pagesize=(page_w, page_h))
-
+    print("creating new pdf")
     sticker_w = STICKER_W_CM * cm
     sticker_h = STICKER_H_CM * cm
     margin = margin_cm * cm
@@ -119,6 +119,7 @@ def append_action(target, source, env):
 
     # Determine the next cell index by reading existing PDF labels
     if target_pdf.exists() and PdfReader is not None:
+        print("pdf exisits")
         reader = PdfReader(str(target_pdf))
         text_all = ''
         for page in reader.pages:
@@ -128,9 +129,12 @@ def append_action(target, source, env):
                 txt = ''
             if txt:
                 text_all += txt
+        print(f"{text_all=}")
         # Remove the invisible timestamp strings (format YYYY-MM-DDThh:mm:ss.micro)
         text_clean = re.sub(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+', '', text_all)
+        print(f"{text_clean=}")
         nums = re.findall(r'\d+', text_clean)
+        print(f"{nums=}")
         if nums:
             total_qrs = max(map(int, nums))
         else:
