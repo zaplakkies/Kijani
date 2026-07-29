@@ -132,9 +132,28 @@ void storesetting(String value, String key)
   Serial.println("finished stopring");
 }
 int getbattery()
-{  //TODO: make this a rolling buffer and ignore 0 reads
-  int adcValue = analogRead(36);
-  return adcValue * calibrationFactor * 1000;
+{
+    static float filtered = 0;
+    static bool initialized = false;
+
+    int reading = analogRead(36);
+
+    // Ignore invalid readings
+    if (reading > 0)
+    {
+        if (!initialized)
+        {
+            filtered = reading;
+            initialized = true;
+        }
+        else
+        {
+            const float alpha = 0.1f;   // Lower = smoother
+            filtered = filtered * (1.0f - alpha) + reading * alpha;
+        }
+    }
+
+    return filtered * calibrationFactor * 1000;
 }
 void updateStatusLed()
 {
