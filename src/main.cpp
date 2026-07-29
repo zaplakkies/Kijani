@@ -30,7 +30,8 @@ AsyncWebServer server(80);
 #define MotorB2 26
 #define servo1Pin 27
 #define servo2Pin 14
-#define Vmod 15
+#define Vmod1 15
+#define Vmod2 13
 #define pgm 5 // factory reset pin
 #define statled 2 //status led
 Servo servo1;
@@ -59,6 +60,20 @@ String startup = "Jingle:d=4,o=5,b=100:8b,16d6,16c6,8e6";
 String test = "Scale:d=4,o=5,b=120:c,d,e,f,g,a,b,c6";
 const char *testbutton = "SouthAfr:d=16,o=5,b=100:8g,8g,8g,8a,4b,4b,4a,4a,4g,4p,8b,8b,8b,8b,4c6,4c6,8b,8b,4b,4a,4p,8g,8g,8g,8a,4b,4b,4a,4c6,4b,4p,4a,4p,4g,4p,8f#,8g,4a,4g";
 
+//Settings default
+String MaxMotor1 = "100";
+int maxmotor1 = 100;
+String MaxMotor2 = "100";
+int maxmotor2 = 100;
+String SwapMotors = "false";
+boolean swapmotors = false;
+String SwapDirectionMotor1 = "false";
+boolean swapdirectionmotor1 = false;
+String SwapDirectionMotor2 = "false";
+boolean swapdirectionmotor2 = false;
+String BoostLevel = "1";
+int boostlevel = 1;
+       
 volatile unsigned long ledFlickerUntil = 0;
 enum LedState
 {
@@ -104,6 +119,7 @@ void loadsettings()
 {
   preferences.begin("settings", true);
   AP = preferences.getString("AP", AP);
+
   APpass = preferences.getString("APpass", APpass);
   startup = preferences.getString(
       "startupTune",
@@ -113,7 +129,72 @@ void loadsettings()
       "0.02352");
   calibrationFactor = temp.toFloat();
 
+  MaxMotor1 = preferences.getString("MaxMotor1", MaxMotor1);
+  maxmotor1 = MaxMotor1.toInt();
+  if (maxmotor1>100 or maxmotor1<0) {
+    maxmotor1 = 100;
+  }
+  MaxMotor2 = preferences.getString("MaxMotor2", MaxMotor2);
+  maxmotor2 = MaxMotor2.toInt();
+  if (maxmotor2>100 or maxmotor2<0) {
+    maxmotor2 = 100;
+  }
+  SwapMotors = preferences.getString("SwapMotors", SwapMotors);
+  swapmotors =  (SwapMotors.length() && tolower(SwapMotors[0]) == 't');
+  SwapDirectionMotor1 = preferences.getString("SwapDirectionMotor1", SwapDirectionMotor1);
+  swapdirectionmotor1 =  (SwapDirectionMotor1.length() && tolower(SwapDirectionMotor1[0]) == 't');
+  SwapDirectionMotor2 = preferences.getString("SwapDirectionMotor2", SwapDirectionMotor2);
+  swapdirectionmotor2 =  (SwapDirectionMotor2.length() && tolower(SwapDirectionMotor2[0]) == 't');
+  BoostLevel = preferences.getString("BoostLevel", BoostLevel);
+  boostlevel = BoostLevel.toInt();
+  if (boostlevel>4 or boostlevel<1) {
+    boostlevel = 1;
+  }
+  switch (boostlevel) {
+    case 1:  //5v
+        pinMode(Vmod1, INPUT); 
+        pinMode(Vmod2, INPUT); 
+        break;
+    case 2:  //6v
+        pinMode(Vmod1, OUTPUT); 
+        digitalWrite(Vmod1, LOW);
+        pinMode(Vmod2, INPUT); 
+        break;
+    case 3:  //8v
+        pinMode(Vmod1, INPUT); 
+        pinMode(Vmod2, OUTPUT); 
+        digitalWrite(Vmod2, LOW);
+        
+        break;
+    case 4:  //9v
+        pinMode(Vmod1, OUTPUT); 
+        digitalWrite(Vmod1, LOW);
+        pinMode(Vmod2, OUTPUT); 
+        digitalWrite(Vmod2, LOW); 
+        break;
+
+    default:
+        pinMode(Vmod1, INPUT); 
+        pinMode(Vmod2, INPUT); 
+
+}
   preferences.end();
+  Serial.println("----- Settings -----");
+  Serial.printf("AP                     : %s\n", AP.c_str());
+  Serial.printf("APpass                 : %s\n", APpass.c_str());
+  Serial.printf("startupTune            : %s\n", startup.c_str());
+  Serial.printf("batteryCalibration     : %.5f\n", calibrationFactor);
+
+  Serial.printf("MaxMotor1              : %d\n", maxmotor1);
+  Serial.printf("MaxMotor2              : %d\n", maxmotor2);
+
+  Serial.printf("SwapMotors             : %s\n", swapmotors ? "true" : "false");
+  Serial.printf("SwapDirectionMotor1    : %s\n", swapdirectionmotor1 ? "true" : "false");
+  Serial.printf("SwapDirectionMotor2    : %s\n", swapdirectionmotor2 ? "true" : "false");
+
+  Serial.printf("BoostLevel             : %d\n", boostlevel);
+  Serial.println("--------------------");
+
 }
 
 void storesetting(String value, String key)
@@ -503,9 +584,15 @@ void setup()
   pinMode(en8v, OUTPUT);
   pinMode(en5v, OUTPUT);
   pinMode(dvrsleep, OUTPUT);
-  pinMode(Vmod, OUTPUT);
-  digitalWrite(Vmod, LOW);  //TODO: add this as a setting output low makes it 6v
-  pinMode(Vmod, INPUT); //inout makes it 5v, this should be the default
+  // pinMode(Vmod, OUTPUT);
+  // digitalWrite(Vmod, LOW);  //TODO: add this as a setting output low makes it 6v
+  pinMode(Vmod1, INPUT); //inout makes it 5v, this should be the default
+  pinMode(Vmod2, INPUT); //inout makes it 5v, this should be the default
+  //Vmod1 Vmod2 Output
+  //  I     I    5v
+  //  L     I    6v
+  //  I     L    8v
+  //  L     L    9v
   pinMode(MotorA1, OUTPUT);
   pinMode(MotorA2, OUTPUT);
   pinMode(MotorB1, OUTPUT);
@@ -585,6 +672,10 @@ void setup()
               if (request->hasParam("M1")) {
                 String value = request->arg("M1");
                 int speed = value.toInt();
+                speed = speed*(maxmotor1/100);
+                if (swapdirectionmotor1) {
+                  speed =speed *-1;
+                }
                 Serial.print("Set M1: ");
                 Serial.println(speed);
                 if (abs(speed) < 5)
@@ -594,18 +685,32 @@ void setup()
                 // get direction
                 if (speed >= 0)
                 {
-                  digitalWrite(MotorA2, LOW);
-                  ledcWrite(MotorA1, speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorB2, LOW);
+                    ledcWrite(MotorB1, speed);
+                  } else {
+                    digitalWrite(MotorA2, LOW);
+                    ledcWrite(MotorA1, speed);
+                  }
                 }
                 else
                 {
-                  digitalWrite(MotorA2, HIGH);
-                  ledcWrite(MotorA1, 255 + speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorB2, HIGH);
+                    ledcWrite(MotorB1, 255 + speed);
+                  } else {
+                    digitalWrite(MotorA2, HIGH);
+                    ledcWrite(MotorA1, 255 + speed);
+                  }
                 }
               }
               if (request->hasParam("M2")) {
                 String value = request->arg("M2");
                 int speed = value.toInt();
+                speed = speed*(maxmotor2/100);
+                if (swapdirectionmotor2) {
+                  speed =speed *-1;
+                }
                 Serial.print("Set M2: ");
                 Serial.println(speed);
                 if (abs(speed) < 5)
@@ -615,13 +720,23 @@ void setup()
                 // get direction
                 if (speed >= 0)
                 {
-                  digitalWrite(MotorB2, LOW);
-                  ledcWrite(MotorB1, speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorA2, LOW);
+                    ledcWrite(MotorA1, speed);
+                  } else {
+                    digitalWrite(MotorB2, LOW);
+                    ledcWrite(MotorB1, speed);
+                  }
                 }
                 else
                 {
-                  digitalWrite(MotorB2, HIGH);
-                  ledcWrite(MotorB1, 255 + speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorA2, HIGH);
+                    ledcWrite(MotorA1, 255 + speed);
+                  } else {
+                    digitalWrite(MotorB2, HIGH);
+                    ledcWrite(MotorB1, 255 + speed);
+                  }
                 }
               }
     
