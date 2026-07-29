@@ -104,6 +104,8 @@ def append_or_create_pdf(target_pdf: Path, new_pdf: Path):
     return target_pdf
 
 def append_action(target, source, env):
+    print("Install requirements.txt to have this work properly")
+    print("important python libraries, working, pillow, qrcode, reportlab, pdfreadedr, pypdf2")
     img_obj, ssid = qr_gen.create_qr_for_attached_device(save_png=False)
     if img_obj is None:
         print("Failed to create image; SSID:", ssid)
