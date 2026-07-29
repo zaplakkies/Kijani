@@ -59,24 +59,15 @@ const config = {
 	],
 
 	plugins: [
-		[
+		...['software', 'hardware', 'assembly'].map((id) => [
 			'@docusaurus/plugin-content-docs',
 			{
-				id: 'software',
-				path: 'docs/software',
-				routeBasePath: 'docs/software',
-				sidebarPath: './sidebars/software.js',
+				id,
+				path: `docs/${id}`,
+				routeBasePath: `docs/${id}`,
+				sidebarPath: `./sidebars/${id}.js`,
 			},
-		],
-		[
-			'@docusaurus/plugin-content-docs',
-			{
-				id: 'hardware',
-				path: 'docs/hardware',
-				routeBasePath: 'docs/hardware',
-				sidebarPath: './sidebars/hardware.js',
-			},
-		],
+		]),
 	],
 
 	themeConfig:
@@ -114,6 +105,12 @@ const config = {
 					items: [
 						{
 							type: 'docSidebar',
+							sidebarId: 'assemblySidebar',
+							docsPluginId: 'assembly',
+							label: 'Assembly',
+						},
+						{
+							type: 'docSidebar',
 							sidebarId: 'softwareSidebar',
 							docsPluginId: 'software',
 							label: 'Software',
@@ -127,6 +124,7 @@ const config = {
 					],
 				},
 				{to: '/blog', label: 'Blog', position: 'left'},
+				{to: '/about', label: 'About', position: 'left'},
 				{
 					href: 'https://github.com/Ithegi/Kijani',
 					label: 'GitHub',
@@ -140,6 +138,10 @@ const config = {
 				{
 					title: 'Docs',
 					items: [
+						{
+							label: 'Assembling the Kit',
+							to: '/docs/assembly',
+						},
 						{
 							label: 'Software',
 							to: '/docs/software',
