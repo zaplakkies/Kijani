@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kijani Bot Control</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            background: #101010;
+            color: white;
+            font-family: Arial;
+            overflow: hidden;
+            user-select: none;
+            touch-action: none;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        #verticalCards {
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #1f1f1f;
+            border-radius: 10px;
+            padding: 10px 16px;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        }
+
+        .statusTitle {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .statusValue {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .main {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: fit-content;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .stopBtn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            background: red;
+            color: white;
+        }
+
+        .joystickContainer {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        input.verticalJoystick {
+            writing-mode: vertical-lr;
+            direction: rtl;
+            appearance: slider-vertical;
+            width: 20px;
+            height: 50%;
+            vertical-align: bottom;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Kijani Bot Control</h1>
+
+<div class="topbar">
+
+    <div id="horizontalCards"></div>
+
+    <!-- Uncomment below to see log messages on mobile. -->
+<!--    <div id="logOutput"></div>-->
+</div>
+
+<div class="main">
+
+    <!-- CONTROLS -->
+    <div class="joystickContainer">
+        <label for="joystickLeft" id="labelLeft"></label>
+        <input type="range" class="verticalJoystick" id="joystickLeft" min="-255" max="255" step="1" />
+    </div>
+    <div id="verticalCards">
+        <div class="card">
+            <div class="statusTitle">Battery</div>
+            <div class="statusValue" id="battery">--</div>
+        </div>
+        <div class="card">
+            <div class="statusTitle">Temperature</div>
+            <div class="statusValue" id="temp">--</div>
+        </div>
+        <div class="card">
+            <div class="statusTitle">Status</div>
+            <div class="statusValue" id="charge">--</div>
+        </div>
+        <div class="card">
+            <button class="stopBtn" onclick="stopAll()">STOP</button>
+        </div>
+    </div>
+    <div class="joystickContainer">
+        <label for="joystickRight" id="labelRight"></label>
+        <input type="range" class="verticalJoystick" id="joystickRight" min="-255" max="255" step="1" />
+    </div>
+</div>
+
+<script>
+const logOutput = document.getElementById('logOutput');
+let logCache = [];
+
+const joystickLeft = document.getElementById('joystickLeft');
+const labelLeft = document.getElementById('labelLeft');
+const joystickRight = document.getElementById('joystickRight');
+const labelRight = document.getElementById('labelRight');
+
+let leftFinger = null;
+let rightFinger = null;
+
+/**
+ * Handles logging, so that we can see messages on mobile devices.
+ * @param message
+ */
+function log(message) {
+    console.log(message);
+    if (logOutput !== null) {
+        if (logCache.length > 0 && logCache[logCache.length-1].content === message) {
+            logCache[logCache.length-1].count++;
+        } else {
+            logCache.push({count: 1, content: message});
+        }
+        if (logCache.length > 4) {
+            logCache.shift();
+        }
+        logOutput.innerText = ``;
+        for (let s of logCache) {
+            logOutput.innerText += `"${s.content}"`;
+            if (s.count > 1) {
+                logOutput.innerText += ` x${s.count}`;
+            }
+            logOutput.innerText += `\n`;
+        }
+    }
+}
+
+function sendControl(m1, m2) {
+    fetch(`/processcontrol?M1=${m1}&M2=${m2}`)
+        .catch(err => log(err));
+    labelLeft.innerText = `M1: ${m1}`;
+    labelRight.innerText = `M2: ${m2}`;
+}
+
+function stopAll() {
+    joystickLeft.value = 0;
+    joystickRight.value = 0;
+    sendControl(0,0);
+}
+
+async function updateStatus() {
+    try {
+        const res = await fetch('/quickstatus');
+        const data = await res.json();
+
+        document.getElementById('battery').innerText =
+            data.vIn.toFixed(2) + 'V';
+
+        document.getElementById('temp').innerText =
+            data.temperature.toFixed(1) + '°C';
+
+        if (data.vIn > 4.5) {
+            document.getElementById('charge').innerText =
+                '⚡ Charging';
+        } else {
+            document.getElementById('charge').innerText =
+                '🔋 Battery';
+        }
+
+    } catch (e) {
+        // log("Error updating status: " + e);
+    }
+}
+
+function updateRangeFromTouch(touch, element) {
+    // Note: touch.clientY starts with 0 at the top of the screen.
+    const elementHeight = element.clientHeight;
+    const elementYCenter = element.getBoundingClientRect().y + elementHeight / 2
+    const pixelDensityModifier = 512 / elementHeight;
+    let value = ((elementYCenter - touch.clientY) * pixelDensityModifier).toFixed(0);
+    if (value > 255) value = 255;
+    else if (value < -255) value = -255;
+    element.value = value;
+    return value;
+}
+
+// Touch handlers for mobile.
+joystickLeft.addEventListener('touchstart', (e) => {
+    log("Left touchstart handler fired.")
+    e.preventDefault();
+    leftFinger = e.targetTouches[e.targetTouches.length-1];   // Grab the newest touch.
+    updateRangeFromTouch(leftFinger, joystickLeft);
+});
+joystickRight.addEventListener('touchstart', (e) => {
+    log("Right touchstart handler fired.")
+    e.preventDefault();
+    rightFinger = e.targetTouches[e.targetTouches.length-1];   // Grab the newest touch.
+    updateRangeFromTouch(rightFinger, joystickRight);
+});
+document.addEventListener("touchmove", (e) => {
+    for (let currentFinger of e.changedTouches) {
+        const identifier = currentFinger.identifier;
+        log("finger identifier = " + identifier + ", left: " + leftFinger?.identifier + ", right: " + rightFinger?.identifier);
+        if (identifier === leftFinger?.identifier) {
+            log("touchmove handler for left finger.")
+            updateRangeFromTouch(currentFinger, joystickLeft);
+            e.preventDefault();
+        } else if (identifier === rightFinger?.identifier) {
+            log("touchmove handler for right finger.")
+            updateRangeFromTouch(currentFinger, joystickRight);
+            e.preventDefault();
+        } else {
+            log("touchmove handler for unclaimed finger.")
+        }
+    }
+})
+function handleTouchEnd(e) {
+    for (let currentFinger of e.changedTouches) {
+        const identifier = currentFinger.identifier;
+        if (identifier === leftFinger?.identifier) {
+            log("touchend handler for left finger.")
+            leftFinger = null;
+            e.preventDefault();
+        } else if (identifier === rightFinger?.identifier) {
+            log("touchend handler for right finger.")
+            rightFinger = null;
+            e.preventDefault();
+        } else {
+            log("touchend handler for unclaimed finger.")
+        }
+    }
+}
+document.addEventListener("touchend", handleTouchEnd)
+document.addEventListener("touchcancel", handleTouchEnd)
+
+stopAll()
+updateStatus();
+setInterval(updateStatus, 3000);
+setInterval(() => sendControl(joystickLeft.value, joystickRight.value), 200);
+
+</script>
+</body>
+</html>
