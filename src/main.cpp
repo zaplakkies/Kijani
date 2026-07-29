@@ -14,8 +14,8 @@
 #include <ESPAsyncWebServer.h>
 #include <Update.h>
 
-#define version "kijani_v3.03b"
-#define versiondate "2026-06-11"
+#define version "kijani_v3.04b"
+#define versiondate "2026-07-29"
 
 Preferences preferences;
 AsyncWebServer server(80);
