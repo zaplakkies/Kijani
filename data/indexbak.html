@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+
+  <div class="header">
+    <a href="index.html" class="logo"><img src="logo.png" alt="Mootbot">Mootbot control interface</a>
+    <div id="ver"></div>
+    <div class="header-right">
+      <a class="active" href="index.html">Home</a>
+      <a href="settings.html">Settings</a>
+      <a href="test.html">test interface</a>
+    </div>
+    <!-- Battery -->
+    <div class="card">
+      <div class="icon" id="batteryIcon">🔋</div>
+      <div class="value" id="batteryValue">-- V</div>
+
+      <div class="gauge">
+        <div class="fill" id="batteryBar"></div>
+      </div>
+
+      <div class="small" id="batteryState">--</div>
+    </div>
+
+    <!-- Temperature -->
+    <div class="card">
+      <div class="icon">🌡️</div>
+      <div class="value" id="tempValue">-- °C</div>
+      <div class="small">Internal Temp</div>
+    </div>
+
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const verDiv = document.getElementById('ver');
+      fetch('/getver')
+        .then(response => response.text())
+        .then(html => {
+          // Insert fetched HTML into the div
+          verDiv.innerHTML = html;
+        });
+    });
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    async function update() {
+
+      try {
+        const res = await fetch('/quickstatus');
+        const data = await res.json();
+
+        let v = data.vIn;
+        let temp = data.temperature;
+
+        // ===== Battery display =====
+        document.getElementById("batteryValue").innerText =
+          v.toFixed(2) + " V";
+
+        // Gauge mapping (assume 3V–6V range)
+        let percent = ((v - 3.5) / (4.2 - 3.5)) * 100;
+        percent = clamp(percent, 0, 100);
+
+        document.getElementById("batteryBar").style.width =
+          percent + "%";
+
+        // Color logic
+        let bar = document.getElementById("batteryBar");
+
+        if (percent < 25) bar.style.background = "red";
+        else if (percent < 60) bar.style.background = "orange";
+        else bar.style.background = "green";
+
+        // Charging logic
+        let icon = document.getElementById("batteryIcon");
+        let state = document.getElementById("batteryState");
+
+        if (v > 4.5) {
+          icon.innerText = "⚡🔋";
+          state.innerText = "Charging";
+          state.className = "charging";
+        } else {
+          icon.innerText = "🔋";
+          state.innerText = "On battery";
+          state.className = "normal";
+        }
+
+        // ===== Temperature =====
+        document.getElementById("tempValue").innerText =
+          temp.toFixed(1) + " °C";
+
+      } catch (e) {
+        console.log("update failed", e);
+      }
+    }
+
+    update();
+    setInterval(update, 3000);
+  </script>
+  <div style="width:95vw; margin-left:auto; margin-right:auto; text-align:left; margin-bottom:20px; margin-top:30px;">
+    <h2>Files in the system</h2>
+  </div>
+  <div>
+    <div><b>Used:</b> <span id="used">0</span> bytes</div>
+    <div><b>Total:</b> <span id="total">0</span> bytes</div>
+    <div><b>Free:</b> <span id="free">0</span> bytes</div>
+  </div>
+  <div class="uploadBox">
+    <input type="file" id="fileInput">
+    <button class="uploadBtn" onclick="uploadFile()">Upload</button>
+    <div id="status"></div>
+  </div>
+  <div id="fileData" style="display:block; margin-left:auto; margin-right:auto; margin-bottom:40px;"><img
+      src="loading.gif" alt="Loading..."></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>Size</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody id="fileTable">
+    </tbody>
+  </table>
+
+  <script>
+    async function loadFiles() {
+
+      const loading = document.getElementById('fileData');
+
+      loading.style.display = 'block';
+
+      try {
+
+        const response = await fetch('/files');
+        const data = await response.json();
+
+        document.getElementById('used').innerText =
+          formatBytes(data.used);
+
+        document.getElementById('total').innerText =
+          formatBytes(data.total);
+
+        document.getElementById('free').innerText =
+          formatBytes(data.total - data.used);
+
+        const table = document.getElementById('fileTable');
+        table.innerHTML = '';
+
+        data.files.forEach(file => {
+
+          const row = document.createElement('tr');
+
+          row.innerHTML = `
+                <td>
+                    <a class="link" href="${file.name}" target="_blank">
+                        ${file.name}
+                    </a>
+                </td>
+
+                <td>${formatBytes(file.size)}</td>
+
+                <td>
+                    <button class="deleteBtn"
+                        onclick="deleteFile('${file.name}')">
+                        Delete
+                    </button>
+                </td>
+            `;
+
+          table.appendChild(row);
+        });
+
+      } catch (err) {
+
+        console.error(err);
+        alert('Failed to load files');
+
+      } finally {
+
+        loading.style.display = 'none';
+      }
+    }
+
+    async function deleteFile(filename) {
+
+      if (!confirm('Delete ' + filename + '?')) {
+        return;
+      }
+
+      try {
+
+        const response = await fetch(
+          '/delete?file=' + encodeURIComponent(filename)
+        );
+
+        const text = await response.text();
+
+        document.getElementById('status').innerText = text;
+
+        loadFiles();
+
+      } catch (err) {
+        console.error(err);
+        alert('Delete failed');
+      }
+    }
+
+    async function uploadFile() {
+
+      const input = document.getElementById('fileInput');
+
+      if (input.files.length === 0) {
+        alert('Select a file first');
+        return;
+      }
+
+      const file = input.files[0];
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      document.getElementById('status').innerText =
+        'Uploading...';
+
+      try {
+
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const text = await response.text();
+
+        document.getElementById('status').innerText = text;
+
+        input.value = '';
+
+        loadFiles();
+
+      } catch (err) {
+        console.error(err);
+        alert('Upload failed');
+      }
+    }
+    function formatBytes(bytes) {
+
+      if (bytes === 0) return '0 B';
+
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+      return parseFloat(
+        (bytes / Math.pow(k, i)).toFixed(2)
+      ) + ' ' + sizes[i];
+    }
+    loadFiles();
+
+  </script>
+
+</body>
+
+</html>
