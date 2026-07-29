@@ -162,7 +162,7 @@ void updateStatusLed()
   {
     ledState = LED_CHARGING;
   }
-  else if (WiFi.status() == WL_CONNECTED)
+  else if (WiFi.softAPgetStationNum() > 0)
   {
     ledState = LED_CONNECTED;
   }
