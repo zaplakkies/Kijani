@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '@theme/Layout';
+import { GithubLogoIcon } from '@phosphor-icons/react';
 
 import {
   BoardArt,
@@ -106,8 +107,8 @@ export default function Home() {
         actions={
           <>
             <Button to="/docs/intro">Build your bot</Button>
-            <Button to="https://github.com/zaplakkies/kijani" variant="ghost">
-              GitHub
+            <Button to="https://github.com/zaplakkies/kijani" variant="ghost" style={{ display: 'flex', alignItems: 'center', gap: '1ch' }}>
+              <GithubLogoIcon size={24} />GitHub
             </Button>
           </>
         }
