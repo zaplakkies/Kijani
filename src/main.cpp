@@ -532,10 +532,20 @@ void setup()
 
   uint64_t chipid = ESP.getEfuseMac();
 
-  char suffix[13];  // 12 hex digits + null terminator
-  sprintf(suffix, "%012llX", chipid);
+  char macString[13];
+  sprintf(macString, "%02X%02X%02X%02X%02X%02X",
+          (uint8_t)(chipid),
+          (uint8_t)(chipid >> 8),
+          (uint8_t)(chipid >> 16),
+          (uint8_t)(chipid >> 24),
+          (uint8_t)(chipid >> 32),
+          (uint8_t)(chipid >> 40));
+
+  String suffix = String(macString);
 
   AP = "MootBot_" + String(suffix);
+  
+  AP.replace(":", "");
   Serial.println(AP);
   Serial.println("ending setup");
 
@@ -741,10 +751,12 @@ void setup()
               // Get WiFi info
               // String macAddress = WiFi.macAddress();
             
-              uint64_t chipid = ESP.getEfuseMac();
-              char suffix[13];  // 12 hex digits + null terminator
-              sprintf(suffix, "%012llX", chipid);
-              String macAddress = String(suffix);
+              // uint64_t chipid = ESP.getEfuseMac();
+              // char suffix[13];  // 12 hex digits + null terminator
+              // sprintf(suffix, "%012llX", chipid);
+              // String macAddress = String(suffix);
+              String macAddress = WiFi.macAddress();      // "AA:BB:CC:DD:EE:FF"
+              macAddress.replace(":", "");  
 
               // Get uptime
               uint32_t uptime = millis() / 1000;
