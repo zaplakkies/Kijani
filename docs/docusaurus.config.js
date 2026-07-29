@@ -59,7 +59,7 @@ const config = {
 	],
 
 	plugins: [
-		...['software', 'hardware', 'assembly'].map((id) => [
+		...['software', 'hardware', 'user-manual'].map((id) => [
 			'@docusaurus/plugin-content-docs',
 			{
 				id,
@@ -105,9 +105,9 @@ const config = {
 					items: [
 						{
 							type: 'docSidebar',
-							sidebarId: 'assemblySidebar',
-							docsPluginId: 'assembly',
-							label: 'Assembly',
+							sidebarId: 'userManualSidebar',
+							docsPluginId: 'user-manual',
+							label: 'User Manual',
 						},
 						{
 							type: 'docSidebar',
@@ -139,8 +139,8 @@ const config = {
 					title: 'Docs',
 					items: [
 						{
-							label: 'Assembling the Kit',
-							to: '/docs/assembly',
+							label: 'User Manual',
+							to: '/docs/user-manual',
 						},
 						{
 							label: 'Software',

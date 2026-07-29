@@ -18,7 +18,7 @@ export default function BoardArt({ className }) {
       <rect x="8" y="8" width="404" height="284" rx="14" className={styles.boardBase} />
       <rect x="8" y="8" width="404" height="284" rx="14" className={styles.boardSheen} />
 
-      <text x="210" y="30" className={styles.silk} textAnchor="middle">KIJANI · V2</text>
+      <text x="210" y="30" className={styles.silk} textAnchor="middle">KIJANI</text>
 
       {/* mounting holes */}
       {[[26, 26], [394, 26], [26, 274], [394, 274]].map(([cx, cy]) => (

@@ -3,9 +3,12 @@ id: intro
 title: Hardware Overview
 ---
 
+import { BoardArt } from '@site/src/components/Kijani';
 import { CpuIcon } from '@phosphor-icons/react';
 
 # <CpuIcon /> Hardware Overview
+
+<BoardArt />
 
 Welcome to the Kijani hardware documentation.
 

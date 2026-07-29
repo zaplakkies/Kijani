@@ -128,7 +128,7 @@ export function FeatureCard({ refdes, title, children, className }) {
     <article className={clsx(styles.featureCard, className)}>
       {refdes != null && <span className={styles.featureRef}>{refdes}</span>}
       <h3>{title}</h3>
-      <p>{children}</p>
+      {children}
     </article>
   );
 }

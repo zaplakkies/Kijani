@@ -106,7 +106,7 @@ export default function Home() {
         }
         actions={
           <>
-            <Button to="/docs/intro">Build your bot</Button>
+            <Button to="/docs/user-manual">Build your bot</Button>
             <Button to="https://github.com/zaplakkies/kijani" variant="ghost" style={{ display: 'flex', alignItems: 'center', gap: '1ch' }}>
               <GithubLogoIcon size={24} />GitHub
             </Button>
@@ -137,8 +137,8 @@ export default function Home() {
                 control page with sliders, wire up a gamepad, or script it from
                 a laptop. The stock interface is just one client.
               </p>
-              <Button to="/docs/api" variant="ghost-light">
-                Read the API docs
+              <Button to="/docs/software" variant="ghost-light">
+                Read the software docs
               </Button>
             </div>
             <Terminal host="10.10.10.10" lines={API_LINES} />
@@ -161,7 +161,7 @@ export default function Home() {
               <Button to="https://docs.google.com/forms/d/e/1FAIpQLSefcmKqDehQRFsC9WDCJS6LWhJCRrktLrYrf-59QBeeA0L29w/viewform">
                 Register interest
               </Button>
-              <Button to="/docs/intro" variant="ghost">
+              <Button to="/docs/user-manual" variant="ghost">
                 Or build from source
               </Button>
             </>
