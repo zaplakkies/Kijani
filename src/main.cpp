@@ -143,9 +143,9 @@ void loadsettings()
   }
   SwapMotors = preferences.getString("SwapMotors", SwapMotors);
   swapmotors =  (SwapMotors.length() && tolower(SwapMotors[0]) == 't');
-  SwapDirectionMotor1 = preferences.getString("SwapDirectionMotor1", SwapDirectionMotor1);
+  SwapDirectionMotor1 = preferences.getString("SwapDMotor1", SwapDirectionMotor1);
   swapdirectionmotor1 =  (SwapDirectionMotor1.length() && tolower(SwapDirectionMotor1[0]) == 't');
-  SwapDirectionMotor2 = preferences.getString("SwapDirectionMotor2", SwapDirectionMotor2);
+  SwapDirectionMotor2 = preferences.getString("SwapDMotor2", SwapDirectionMotor2);
   swapdirectionmotor2 =  (SwapDirectionMotor2.length() && tolower(SwapDirectionMotor2[0]) == 't');
   BoostLevel = preferences.getString("BoostLevel", BoostLevel);
   boostlevel = BoostLevel.toInt();
@@ -482,93 +482,93 @@ void updateStatusLed()
   }
 }
 
-void processItem(const String &item)
-{
-  // Split by colon to get name and data
-  int delimiterPos = item.indexOf(':');
-  if (delimiterPos == -1)
-  {
-    Serial.println("Malformed data item: " + item);
-    return;
-  }
+// void processItem(const String &item)
+// {
+//   // Split by colon to get name and data
+//   int delimiterPos = item.indexOf(':');
+//   if (delimiterPos == -1)
+//   {
+//     Serial.println("Malformed data item: " + item);
+//     return;
+//   }
 
-  String name = item.substring(0, delimiterPos);
-  String value = item.substring(delimiterPos + 1);
+//   String name = item.substring(0, delimiterPos);
+//   String value = item.substring(delimiterPos + 1);
 
-  // Handle each item based on its name
-  if (name == "M1")
-  {
-    int speed = value.toInt();
-    Serial.print("Set M1: ");
-    Serial.println(speed);
-    if (abs(speed) < 5)
-    {
-      speed = 0;
-    }
-    // get direction
-    if (speed >= 0)
-    {
-      digitalWrite(MotorA2, LOW);
-      ledcWrite(MotorA1, speed);
-    }
-    else
-    {
-      digitalWrite(MotorA2, HIGH);
-      ledcWrite(MotorA1, 255 + speed);
-    }
-  }
-  else if (name == "M2")
-  {
-    int speed = value.toInt();
-    Serial.print("Set M2: ");
-    Serial.println(speed);
-    if (abs(speed) < 5)
-    {
-      speed = 0;
-    }
-    // get direction
-    if (speed >= 0)
-    {
-      digitalWrite(MotorB2, LOW);
-      ledcWrite(MotorB1, speed);
-    }
-    else
-    {
-      digitalWrite(MotorB2, HIGH);
-      ledcWrite(MotorB1, 255 + speed);
-    }
-  }
-  else if (name == "S1")
-  {
-    int speed = value.toInt();
-    Serial.print("Set S1: ");
-    Serial.println(speed);
-    servo1.write(speed);
-  }
-  else if (name == "S2")
-  {
-    int speed = value.toInt();
-    Serial.print("Set S2: ");
-    Serial.println(speed);
-    servo2.write(speed);
-  }
-  else if (name == "estop")
-  {
-    bool estopOn = (value == "on");
-    Serial.print("estop has been set to ");
-    Serial.println(estopOn ? "ON" : "OFF");
-    ledcWrite(MotorA1, 0);
-    ledcWrite(MotorB1, 0);
-    digitalWrite(MotorA2, LOW);
-    digitalWrite(MotorB2, LOW);
-  }
+//   // Handle each item based on its name
+//   if (name == "M1")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set M1: ");
+//     Serial.println(speed);
+//     if (abs(speed) < 5)
+//     {
+//       speed = 0;
+//     }
+//     // get direction
+//     if (speed >= 0)
+//     {
+//       digitalWrite(MotorA2, LOW);
+//       ledcWrite(MotorA1, speed);
+//     }
+//     else
+//     {
+//       digitalWrite(MotorA2, HIGH);
+//       ledcWrite(MotorA1, 255 + speed);
+//     }
+//   }
+//   else if (name == "M2")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set M2: ");
+//     Serial.println(speed);
+//     if (abs(speed) < 5)
+//     {
+//       speed = 0;
+//     }
+//     // get direction
+//     if (speed >= 0)
+//     {
+//       digitalWrite(MotorB2, LOW);
+//       ledcWrite(MotorB1, speed);
+//     }
+//     else
+//     {
+//       digitalWrite(MotorB2, HIGH);
+//       ledcWrite(MotorB1, 255 + speed);
+//     }
+//   }
+//   else if (name == "S1")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set S1: ");
+//     Serial.println(speed);
+//     servo1.write(speed);
+//   }
+//   else if (name == "S2")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set S2: ");
+//     Serial.println(speed);
+//     servo2.write(speed);
+//   }
+//   else if (name == "estop")
+//   {
+//     bool estopOn = (value == "on");
+//     Serial.print("estop has been set to ");
+//     Serial.println(estopOn ? "ON" : "OFF");
+//     ledcWrite(MotorA1, 0);
+//     ledcWrite(MotorB1, 0);
+//     digitalWrite(MotorA2, LOW);
+//     digitalWrite(MotorB2, LOW);
+//   }
 
-  else
-  {
-    Serial.println("Unknown name: " + name);
-    Serial.println("got: " + item);
-  }
-}
+//   else
+//   {
+//     Serial.println("Unknown name: " + name);
+//     Serial.println("got: " + item);
+//   }
+// }
 
 void setMotorSpeed(int speed, int direction)
 {
@@ -681,12 +681,14 @@ void setup()
               if (request->hasParam("M1")) {
                 String value = request->arg("M1");
                 int speed = value.toInt();
-                speed = speed*(maxmotor1/100);
+                Serial.print("Set M1: ");
+                Serial.println(speed);
+                speed = (speed*maxmotor1)/100;
+                // Serial.println(speed);
                 if (swapdirectionmotor1) {
                   speed =speed *-1;
                 }
-                Serial.print("Set M1: ");
-                Serial.println(speed);
+                // Serial.println(speed);
                 if (abs(speed) < 5)
                 {
                   speed = 0;
@@ -716,7 +718,7 @@ void setup()
               if (request->hasParam("M2")) {
                 String value = request->arg("M2");
                 int speed = value.toInt();
-                speed = speed*(maxmotor2/100);
+                speed = (speed*maxmotor2)/100;
                 if (swapdirectionmotor2) {
                   speed =speed *-1;
                 }
