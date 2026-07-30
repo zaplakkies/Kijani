@@ -45,6 +45,8 @@ int freq = 1000;
 TaskHandle_t Task1; // motor and pins task
 TaskHandle_t Task2; // radio tasks
 
+long beeptime=0;
+
 float battvoltage = 0;
 float temperature = 0;
 String AP = "Mootbot"; // default ssid for our AP
@@ -236,154 +238,6 @@ int getbattery()
 
     return filtered * calibrationFactor * 1000;
 }
-void updateStatusLed()
-{
-  // Determine state
-  if (getbattery() > 4500 )
-  {
-    ledState = LED_CHARGING;
-  }
-  else if (WiFi.softAPgetStationNum() > 0)
-  {
-    ledState = LED_CONNECTED;
-  }
-  else
-  {
-    ledState = LED_NO_WIFI;
-  }
-
-  unsigned long now = millis();
-
-  switch (ledState)
-  {
-    case LED_CHARGING:
-      // Fast heartbeat (200ms)
-      if (now - lastLedChange > 200)
-      {
-        lastLedChange = now;
-        ledOutput = !ledOutput;
-        digitalWrite(statled, ledOutput);
-      }
-      break;
-
-    case LED_NO_WIFI:
-      // Slow heartbeat (1000ms)
-      if (now - lastLedChange > 1000)
-      {
-        lastLedChange = now;
-        ledOutput = !ledOutput;
-        digitalWrite(statled, ledOutput);
-      }
-      break;
-
-    case LED_CONNECTED:
-
-      if (millis() < ledFlickerUntil)
-      {
-        digitalWrite(statled, LOW);
-      }
-      else
-      {
-        digitalWrite(statled, HIGH);
-      }
-      break;
-  }
-}
-
-void processItem(const String &item)
-{
-  // Split by colon to get name and data
-  int delimiterPos = item.indexOf(':');
-  if (delimiterPos == -1)
-  {
-    Serial.println("Malformed data item: " + item);
-    return;
-  }
-
-  String name = item.substring(0, delimiterPos);
-  String value = item.substring(delimiterPos + 1);
-
-  // Handle each item based on its name
-  if (name == "M1")
-  {
-    int speed = value.toInt();
-    Serial.print("Set M1: ");
-    Serial.println(speed);
-    if (abs(speed) < 5)
-    {
-      speed = 0;
-    }
-    // get direction
-    if (speed >= 0)
-    {
-      digitalWrite(MotorA2, LOW);
-      ledcWrite(MotorA1, speed);
-    }
-    else
-    {
-      digitalWrite(MotorA2, HIGH);
-      ledcWrite(MotorA1, 255 + speed);
-    }
-  }
-  else if (name == "M2")
-  {
-    int speed = value.toInt();
-    Serial.print("Set M2: ");
-    Serial.println(speed);
-    if (abs(speed) < 5)
-    {
-      speed = 0;
-    }
-    // get direction
-    if (speed >= 0)
-    {
-      digitalWrite(MotorB2, LOW);
-      ledcWrite(MotorB1, speed);
-    }
-    else
-    {
-      digitalWrite(MotorB2, HIGH);
-      ledcWrite(MotorB1, 255 + speed);
-    }
-  }
-  else if (name == "S1")
-  {
-    int speed = value.toInt();
-    Serial.print("Set S1: ");
-    Serial.println(speed);
-    servo1.write(speed);
-  }
-  else if (name == "S2")
-  {
-    int speed = value.toInt();
-    Serial.print("Set S2: ");
-    Serial.println(speed);
-    servo2.write(speed);
-  }
-  else if (name == "estop")
-  {
-    bool estopOn = (value == "on");
-    Serial.print("estop has been set to ");
-    Serial.println(estopOn ? "ON" : "OFF");
-    ledcWrite(MotorA1, 0);
-    ledcWrite(MotorB1, 0);
-    digitalWrite(MotorA2, LOW);
-    digitalWrite(MotorB2, LOW);
-  }
-
-  else
-  {
-    Serial.println("Unknown name: " + name);
-    Serial.println("got: " + item);
-  }
-}
-
-void setMotorSpeed(int speed, int direction)
-{
-  speed = constrain(speed, 0, 255); // Limit speed to valid range
-  digitalWrite(MotorA2, direction);
-  ledcWrite(0, speed); // Set PWM duty cycle
-}
 void playTone(int frequency, int duration_ms)
 {
   // Calculate the delay for half a wave (1/frequency)
@@ -407,6 +261,7 @@ void playTone(int frequency, int duration_ms)
   digitalWrite(MotorA1, LOW);
   digitalWrite(MotorA2, LOW);
 }
+
 void playRTTTL(const char *p)
 {
   int default_dur = 4;
@@ -566,6 +421,160 @@ void playRTTTL(const char *p)
     delay(duration / 10);
   }
   ledcAttach(MotorA1, 5000, 8);
+}
+
+
+void updateStatusLed()
+{
+  // Determine state
+  if (getbattery() > 4500 )
+  {
+    ledState = LED_CHARGING;
+  }
+  else if (WiFi.softAPgetStationNum() > 0)
+  {
+    ledState = LED_CONNECTED;
+  }
+  else
+  {
+    ledState = LED_NO_WIFI;
+  }
+
+  unsigned long now = millis();
+
+  switch (ledState)
+  {
+    case LED_CHARGING:
+      // Fast heartbeat (200ms)
+      if (now - lastLedChange > 200)
+      {
+        lastLedChange = now;
+        ledOutput = !ledOutput;
+        digitalWrite(statled, ledOutput);
+      }
+      break;
+
+    case LED_NO_WIFI:
+      // Slow heartbeat (1000ms)
+      if (now - lastLedChange > 1000)
+      {
+        lastLedChange = now;
+        ledOutput = !ledOutput;
+        digitalWrite(statled, ledOutput);
+      }
+      if (millis() > beeptime) {
+        playRTTTL("beep:d=4,o=5,b=400:c,c,c");
+        beeptime = millis()+10000;
+      }
+      break;
+
+    case LED_CONNECTED:
+
+      if (millis() < ledFlickerUntil)
+      {
+        digitalWrite(statled, LOW);
+      }
+      else
+      {
+        digitalWrite(statled, HIGH);
+      }
+      break;
+  }
+}
+
+void processItem(const String &item)
+{
+  // Split by colon to get name and data
+  int delimiterPos = item.indexOf(':');
+  if (delimiterPos == -1)
+  {
+    Serial.println("Malformed data item: " + item);
+    return;
+  }
+
+  String name = item.substring(0, delimiterPos);
+  String value = item.substring(delimiterPos + 1);
+
+  // Handle each item based on its name
+  if (name == "M1")
+  {
+    int speed = value.toInt();
+    Serial.print("Set M1: ");
+    Serial.println(speed);
+    if (abs(speed) < 5)
+    {
+      speed = 0;
+    }
+    // get direction
+    if (speed >= 0)
+    {
+      digitalWrite(MotorA2, LOW);
+      ledcWrite(MotorA1, speed);
+    }
+    else
+    {
+      digitalWrite(MotorA2, HIGH);
+      ledcWrite(MotorA1, 255 + speed);
+    }
+  }
+  else if (name == "M2")
+  {
+    int speed = value.toInt();
+    Serial.print("Set M2: ");
+    Serial.println(speed);
+    if (abs(speed) < 5)
+    {
+      speed = 0;
+    }
+    // get direction
+    if (speed >= 0)
+    {
+      digitalWrite(MotorB2, LOW);
+      ledcWrite(MotorB1, speed);
+    }
+    else
+    {
+      digitalWrite(MotorB2, HIGH);
+      ledcWrite(MotorB1, 255 + speed);
+    }
+  }
+  else if (name == "S1")
+  {
+    int speed = value.toInt();
+    Serial.print("Set S1: ");
+    Serial.println(speed);
+    servo1.write(speed);
+  }
+  else if (name == "S2")
+  {
+    int speed = value.toInt();
+    Serial.print("Set S2: ");
+    Serial.println(speed);
+    servo2.write(speed);
+  }
+  else if (name == "estop")
+  {
+    bool estopOn = (value == "on");
+    Serial.print("estop has been set to ");
+    Serial.println(estopOn ? "ON" : "OFF");
+    ledcWrite(MotorA1, 0);
+    ledcWrite(MotorB1, 0);
+    digitalWrite(MotorA2, LOW);
+    digitalWrite(MotorB2, LOW);
+  }
+
+  else
+  {
+    Serial.println("Unknown name: " + name);
+    Serial.println("got: " + item);
+  }
+}
+
+void setMotorSpeed(int speed, int direction)
+{
+  speed = constrain(speed, 0, 255); // Limit speed to valid range
+  digitalWrite(MotorA2, direction);
+  ledcWrite(0, speed); // Set PWM duty cycle
 }
 
 void setup()
