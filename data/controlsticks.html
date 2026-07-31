@@ -50,7 +50,7 @@
             background: var(--card-background);
             border-radius: 10px;
             padding: 10px 16px;
-            min-width: 120px;
+            min-width: 9em;
             text-align: center;
             box-shadow: var(--card-shadow);
         }
@@ -179,7 +179,7 @@
         </div>
         <div class="card">
             <div class="statusTitle">Status</div>
-            <div class="statusValue" id="charge">--</div>
+            <div class="statusValue" id="status">--</div>
         </div>
         <div class="card">
             <button class="stopBtn" onclick="stopAll()">STOP</button>
@@ -243,27 +243,35 @@ function stopAll() {
 }
 
 async function updateStatus() {
+    let battery = '--'
+    let temperature = '--'
+    let status = '--';  // Try to keep status less than 9 characters total length to not resize the container
+
     try {
         const res = await fetch('/quickstatus');
-        const data = await res.json();
+        if (res.ok) {   // If robot responded successful.
+            const data = await res.json();
+            battery = data.vIn.toFixed(2) + 'V';
+            temperature = data.temperature.toFixed(1) + '°C';
 
-        document.getElementById('battery').innerText =
-            data.vIn.toFixed(2) + 'V';
+            if (data.vIn > 4.5) {
+                status = '⚡ Charge';
+            } else {
+                status = '🔋 Battery';
+            }
 
-        document.getElementById('temp').innerText =
-            data.temperature.toFixed(1) + '°C';
-
-        if (data.vIn > 4.5) {
-            document.getElementById('charge').innerText =
-                '⚡ Charging';
         } else {
-            document.getElementById('charge').innerText =
-                '🔋 Battery';
+            status = '🌐 No Conn';
         }
 
     } catch (e) {
         log("Error updating status: " + e);
+        status = '❗ Error';
     }
+
+    document.getElementById('battery').innerText = battery;
+    document.getElementById('temp').innerText = temperature;
+    document.getElementById('status').innerText = status;
 }
 
 function updateRangeFromTouch(touch, element) {
