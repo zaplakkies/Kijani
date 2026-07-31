@@ -34,8 +34,8 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 STICKER_W_CM = 1.51
 STICKER_H_CM = 1.64
-COLS = 6
-ROWS = 8
+COLS = 9
+ROWS = 10
 
 def create_pdf_page(img_pil, out_pdf: Path, index=None, cell_index=0,
                     cols=COLS, rows=ROWS, margin_cm=0.5, spacing_cm=0.2):
@@ -67,10 +67,10 @@ def create_pdf_page(img_pil, out_pdf: Path, index=None, cell_index=0,
                 preserveAspectRatio=True, mask='auto')
 
     if index is not None:
-        c.setFont("Helvetica", 8)
+        c.setFont("Helvetica", 6)
         c.setFillColorRGB(0, 0, 0)
         c.drawCentredString(x_start + sticker_w/2,
-                            y_start + sticker_h + (0.15*cm),
+                            y_start + sticker_h - (0.05*cm),
                             str(index))
 
     # Invisible timestamp (to avoid confusion with sticker numbers)
