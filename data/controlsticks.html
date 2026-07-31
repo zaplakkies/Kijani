@@ -7,6 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        :root {
+            --card-background: #1f1f1f;
+            --card-shadow: 0 0 10px rgba(0,0,0,0.4);
+            --joystick-track-color: #1f1f1f;
+            --joystick-track-border: 0px;
+            --joystick-thumb-color: #deddda;
+            --joystick-thumb-border: 2px solid #deddda;
+        }
+
         body {
             margin: 0;
             background: #101010;
@@ -38,12 +47,12 @@
         }
 
         .card {
-            background: #1f1f1f;
+            background: var(--card-background);
             border-radius: 10px;
             padding: 10px 16px;
             min-width: 120px;
             text-align: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+            box-shadow: var(--card-shadow);
         }
 
         .statusTitle {
@@ -82,15 +91,60 @@
             display: inline-flex;
             flex-direction: column;
             justify-content: center;
+            text-align: center;
+            min-width: 4em;
         }
 
-        input.verticalJoystick {
+        /* Target Input */
+        .verticalJoystick {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
             writing-mode: vertical-lr;
             direction: rtl;
-            appearance: slider-vertical;
             width: 20px;
             height: 50%;
             vertical-align: bottom;
+            margin: 10px 2em;
+        }
+
+        /* --- Webkit Browsers --- */
+        .verticalJoystick::-webkit-slider-runnable-track {
+            width: 30px;
+            background: var(--joystick-track-color);
+            border-radius: 30px;
+            border:  var(--joystick-track-border);
+            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .verticalJoystick::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 40px;
+            width: 40px;
+            background: var(--joystick-thumb-color);
+            border-radius: 30px;
+            border: var(--joystick-thumb-border);
+            box-shadow: 0px 4px 15px rgba(119, 118, 123, 0.4);
+            margin-top: -6px;
+        }
+
+        /* --- Firefox --- */
+        .verticalJoystick::-moz-range-track {
+            width: 30px;
+            background: var(--joystick-track-color);
+            border-radius: 30px;
+            border: var(--joystick-track-border);
+            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .verticalJoystick::-moz-range-thumb {
+            height: 40px;
+            width: 40px;
+            background: var(--joystick-thumb-color);
+            border-radius: 30px;
+            border: var(--joystick-thumb-border);
+            box-shadow: 0px 4px 15px rgba(119, 118, 123, 0.4);
         }
     </style>
 </head>
