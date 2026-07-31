@@ -208,7 +208,7 @@ async function updateStatus() {
         }
 
     } catch (e) {
-        // log("Error updating status: " + e);
+        log("Error updating status: " + e);
     }
 }
 
@@ -222,6 +222,15 @@ function updateRangeFromTouch(touch, element) {
     else if (value < -255) value = -255;
     element.value = value;
     return value;
+}
+
+function isTouchInsideElement(finger, element) {
+    const tolerance = 20;   // Little bit extra to account for the size of a finger.
+    const elmRect = element.getBoundingClientRect();
+    return finger.clientX >= (elmRect.x - tolerance) &&
+        finger.clientX <= (elmRect.x + elmRect.width + tolerance) &&
+        finger.clientY >= (elmRect.y - tolerance) &&
+        finger.clientY <= (elmRect.y + elmRect.height + tolerance);
 }
 
 // Touch handlers for mobile.
@@ -243,12 +252,22 @@ document.addEventListener("touchmove", (e) => {
         log("finger identifier = " + identifier + ", left: " + leftFinger?.identifier + ", right: " + rightFinger?.identifier);
         if (identifier === leftFinger?.identifier) {
             log("touchmove handler for left finger.")
-            updateRangeFromTouch(currentFinger, joystickLeft);
             e.preventDefault();
+            updateRangeFromTouch(currentFinger, joystickLeft);
         } else if (identifier === rightFinger?.identifier) {
             log("touchmove handler for right finger.")
-            updateRangeFromTouch(currentFinger, joystickRight);
             e.preventDefault();
+            updateRangeFromTouch(currentFinger, joystickRight);
+        } else if (leftFinger === null && isTouchInsideElement(currentFinger, joystickLeft)) {
+            log("touchmove capturing left finger.");
+            e.preventDefault();
+            leftFinger = currentFinger;
+            updateRangeFromTouch(currentFinger, joystickLeft);
+        } else if (rightFinger === null && isTouchInsideElement(currentFinger, joystickRight)) {
+            log("touchmove capturing right finger.");
+            e.preventDefault();
+            rightFinger = currentFinger;
+            updateRangeFromTouch(currentFinger, joystickRight);
         } else {
             log("touchmove handler for unclaimed finger.")
         }
