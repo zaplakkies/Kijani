@@ -1,30 +1,96 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Kijani — global Docusaurus theme
+ * Single source of truth for the design system: every colour and font the
+ * site uses is defined here as a --kj-* token. Components in
+ * src/components/Kijani consume these tokens, so restyling the whole site
+ * means editing this file only.
  */
 
-/* You can override the default Infima variables here. */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* ---------------- Kijani design tokens ---------------- */
+
+  /* type */
+  --kj-font-display: 'Chakra Petch', system-ui, sans-serif;
+  --kj-font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --kj-font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* solder mask greens */
+  --kj-mask: #0b4a31;        /* primary PCB green */
+  --kj-mask-deep: #08402a;   /* hero gradient mid-stop */
+  --kj-mask-dark: #06301f;   /* darkest green: strips, gradient end */
+  --kj-mask-halo: #12634376; /* translucent radial glow in hero */
+  --kj-board: #0e553a;       /* board substrate fill */
+  --kj-board-line: #1a7a52;  /* board edge highlight */
+
+  /* copper / ENIG gold */
+  --kj-copper: #c9873f;      /* traces, primary buttons */
+  --kj-gold: #e5b45b;        /* pads, highlights, hover */
+  --kj-copper-ink: #a56526;  /* copper legible on light bg */
+
+  /* silkscreen + light surfaces */
+  --kj-silk: #f3f1e7;        /* silkscreen white (ink on green) */
+  --kj-paper: #f2f4ee;       /* light section background */
+  --kj-card: #ffffff;        /* card surfaces */
+  --kj-line: #d8ded2;        /* card borders on light */
+
+  /* inks */
+  --kj-ink: #14261d;         /* near-black green: text, dark sections */
+  --kj-ink-soft: #3c4f44;    /* secondary text on light */
+  --kj-ink-mute: #5a6f62;    /* tertiary text on light */
+  --kj-btn-ink: #10130f;     /* text on copper buttons */
+
+  /* greens-on-dark text */
+  --kj-frost: #e7ede4;       /* body text on dark sections */
+  --kj-mist: #dfe8dd;        /* lead text on hero/CTA */
+  --kj-mist-dim: #c4d2c6;    /* paragraph text on dark sections */
+  --kj-sage: #9db8a7;        /* muted labels on dark */
+  --kj-sage-dim: #6c8577;    /* comments in terminal */
+
+  /* component chrome */
+  --kj-chip-line: #2c4436;   /* chip outlines, terminal borders */
+  --kj-chip-shield: #223629; /* ESP32 shield fill */
+  --kj-terminal: #0b1712;    /* terminal background */
+
+  /* ---------------- Infima overrides ---------------- */
+  --ifm-color-primary: var(--kj-mask);
+  --ifm-color-primary-dark: #09402a;
+  --ifm-color-primary-darker: #083c27;
+  --ifm-color-primary-darkest: var(--kj-mask-dark);
+  --ifm-color-primary-light: #0d5438;
+  --ifm-color-primary-lighter: #0e583b;
+  --ifm-color-primary-lightest: #126747;
+
+  --ifm-font-family-base: var(--kj-font-body);
+  --ifm-font-family-monospace: var(--kj-font-mono);
+  --ifm-heading-font-family: var(--kj-font-display);
+  --ifm-heading-font-weight: 600;
+
+  --ifm-code-font-size: 90%;
+  --ifm-navbar-height: 3.75rem;
+  --docusaurus-highlighted-code-line-bg: rgba(11, 74, 49, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* Lighter greens for contrast in dark mode */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #4cba8b;
+  --ifm-color-primary-dark: #3fae7f;
+  --ifm-color-primary-darker: #3ba478;
+  --ifm-color-primary-darkest: #308763;
+  --ifm-color-primary-light: #60c297;
+  --ifm-color-primary-lighter: #6ac69e;
+  --ifm-color-primary-lightest: #86d1b0;
+
+  --ifm-background-color: #10201a;
+  --ifm-background-surface-color: var(--kj-ink);
+  --docusaurus-highlighted-code-line-bg: rgba(229, 180, 91, 0.12);
+}
+
+/* Navbar title in the display face, silkscreen-style */
+.navbar__title {
+  font-family: var(--kj-font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }

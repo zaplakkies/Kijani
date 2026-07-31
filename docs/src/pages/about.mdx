@@ -1,0 +1,85 @@
+---
+title: About
+description: How Kijani went from a Bluetooth toy to an open-source battle bot platform on a single ESP32 PCB.
+---
+
+import {
+  FeatureGrid,
+  Section,
+  SectionTitle,
+} from '@site/src/components/Kijani';
+
+# About Kijani
+
+<Refdes id="RX">The project</Refdes>
+
+Kijani is an open-source ESP32-based battle robot platform. It puts motor drivers, battery charging, WiFi, Bluetooth, servo control and a browser-hosted control interface on a single compact PCB — everything a combat robot needs, without a stack of separate modules.
+
+The goal is straightforward: make it cheap enough and simple enough that anyone can build a battle bot, design their own control UI, and learn embedded systems along the way.
+
+## What's on the board
+
+<Section
+  refdes="U1"
+  eyebrow="Everything the robot needs is on the PCB"
+  title="No module stack. No wiring loom. No transmitter."
+>
+	<FeatureGrid
+	  features={[
+		{
+		  ref: 'M1·M2',
+		  title: 'Dual motor drivers',
+		  body: 'Two DC outputs for differential drive or drive-plus-weapon — no external H-bridge modules.',
+		},
+		{
+		  ref: 'S1·S2',
+		  title: 'Servo outputs',
+		  body: 'Two channels for flippers, steering or weapon actuators, with an optional boost regulator for higher-voltage servos.',
+		},
+		{
+		  ref: 'CHG',
+		  title: 'LiPo charging',
+		  body: 'Single-cell charging built into the PCB. Plug in over USB, charge, unplug and fight.',
+		},
+		{
+		  ref: 'AP',
+		  title: 'WiFi + Bluetooth',
+		  body: 'The ESP32 hosts its own access point and serves a browser-based control UI. No app, no transmitter, no pairing.',
+		},
+		{
+		  ref: 'FS',
+		  title: 'LittleFS web hosting',
+		  body: "Your control pages — plain HTML, CSS and JavaScript — live on the ESP32's filesystem. Upload your own and the robot serves them.",
+		},
+		{
+		  ref: 'API',
+		  title: 'Open HTTP API',
+		  body: 'Motors, servos, telemetry, settings and files are all HTTP endpoints. Anything that can make a request can drive the bot.',
+		},
+	  ]}
+	/>
+</Section>
+
+<br />
+
+## History
+
+<Refdes id="V1">2024 — First board</Refdes>
+
+Kijani started after an interest in the antweight competitions run by the [South African Robot League](https://www.facebook.com/groups/sarobotleague). At the time, combat robots were expensive, needed many separate electronics modules, and the control systems were more complicated than they had to be.
+
+The original brief was simple: **put everything a combat robot needs on a single ESP32 board.**
+
+The first version used Bluetooth control with an Android app built in MIT App Inventor. It worked — but it only ran on Android, and the Bluetooth range was limited in a noisy arena.
+
+<Refdes id="V2">2025 — Rover Moot and Version 2</Refdes>
+
+In 2025 the project evolved while supporting the [Africa Rover Moot](https://www.scouts.org.za/2africascoutmoot/). The design shifted to WiFi with a browser-based UI so that any phone could connect — no app install, no platform lock-in.
+
+Version 2 of the PCB also made the board cheaper and easier to manufacture: 5 mm shorter, a simpler regulator stage, fewer components, and a layout optimised for pick-and-place assembly.
+
+## Get involved
+
+Kijani is fully open-source under the Unlicence. Contributions are welcome — bug fixes, UI improvements, documentation, new robot designs, hardware revisions, or anything else that makes the platform better.
+
+<KjButton to="https://github.com/zaplakkies/kijani" variant="ghost">View on GitHub</KjButton>
