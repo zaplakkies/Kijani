@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kijani Bot Control</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --card-background: #1f1f1f;
+            --card-shadow: 0 0 10px rgba(0,0,0,0.4);
+            --joystick-track-color: #1f1f1f;
+            --joystick-track-border: 0px;
+            --joystick-thumb-color: #deddda;
+            --joystick-thumb-border: 2px solid #deddda;
+        }
+
+        body {
+            margin: 0;
+            background: #101010;
+            color: white;
+            font-family: Arial;
+            overflow: hidden;
+            user-select: none;
+            touch-action: none;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        #verticalCards {
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 10px;
+            padding: 10px 16px;
+            min-width: 9em;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .statusTitle {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .statusValue {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .main {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: fit-content;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .stopBtn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            background: red;
+            color: white;
+        }
+
+        .joystickContainer {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            min-width: 4em;
+        }
+
+        /* Target Input */
+        .verticalJoystick {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            writing-mode: vertical-lr;
+            direction: rtl;
+            width: 20px;
+            height: 50%;
+            vertical-align: bottom;
+            margin: 10px 2em;
+        }
+
+        /* --- Webkit Browsers --- */
+        .verticalJoystick::-webkit-slider-runnable-track {
+            width: 30px;
+            background: var(--joystick-track-color);
+            border-radius: 30px;
+            border:  var(--joystick-track-border);
+            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .verticalJoystick::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 40px;
+            width: 40px;
+            background: var(--joystick-thumb-color);
+            border-radius: 30px;
+            border: var(--joystick-thumb-border);
+            box-shadow: 0px 4px 15px rgba(119, 118, 123, 0.4);
+            margin-top: -6px;
+        }
+
+        /* --- Firefox --- */
+        .verticalJoystick::-moz-range-track {
+            width: 30px;
+            background: var(--joystick-track-color);
+            border-radius: 30px;
+            border: var(--joystick-track-border);
+            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .verticalJoystick::-moz-range-thumb {
+            height: 40px;
+            width: 40px;
+            background: var(--joystick-thumb-color);
+            border-radius: 30px;
+            border: var(--joystick-thumb-border);
+            box-shadow: 0px 4px 15px rgba(119, 118, 123, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Kijani Bot Control</h1>
+
+<div class="topbar">
+
+    <div id="horizontalCards"></div>
+
+    <!-- Uncomment below to see log messages on mobile. -->
+<!--    <div id="logOutput"></div>-->
+</div>
+
+<div class="main">
+
+    <!-- CONTROLS -->
+    <div class="joystickContainer">
+        <label for="joystickLeft" id="labelLeft"></label>
+        <input type="range" class="verticalJoystick" id="joystickLeft" min="-255" max="255" step="1" />
+    </div>
+    <div id="verticalCards">
+        <div class="card">
+            <div class="statusTitle">Battery</div>
+            <div class="statusValue" id="battery">--</div>
+        </div>
+        <div class="card">
+            <div class="statusTitle">Temperature</div>
+            <div class="statusValue" id="temp">--</div>
+        </div>
+        <div class="card">
+            <div class="statusTitle">Status</div>
+            <div class="statusValue" id="status">--</div>
+        </div>
+        <div class="card">
+            <button class="stopBtn" onclick="stopAll()">STOP</button>
+        </div>
+    </div>
+    <div class="joystickContainer">
+        <label for="joystickRight" id="labelRight"></label>
+        <input type="range" class="verticalJoystick" id="joystickRight" min="-255" max="255" step="1" />
+    </div>
+</div>
+
+<script>
+const logOutput = document.getElementById('logOutput');
+let logCache = [];
+
+const joystickLeft = document.getElementById('joystickLeft');
+const labelLeft = document.getElementById('labelLeft');
+const joystickRight = document.getElementById('joystickRight');
+const labelRight = document.getElementById('labelRight');
+
+let leftFinger = null;
+let rightFinger = null;
+
+/**
+ * Handles logging, so that we can see messages on mobile devices.
+ * @param message
+ */
+function log(message) {
+    console.log(message);
+    if (logOutput !== null) {
+        if (logCache.length > 0 && logCache[logCache.length-1].content === message) {
+            logCache[logCache.length-1].count++;
+        } else {
+            logCache.push({count: 1, content: message});
+        }
+        if (logCache.length > 4) {
+            logCache.shift();
+        }
+        logOutput.innerText = ``;
+        for (let s of logCache) {
+            logOutput.innerText += `"${s.content}"`;
+            if (s.count > 1) {
+                logOutput.innerText += ` x${s.count}`;
+            }
+            logOutput.innerText += `\n`;
+        }
+    }
+}
+
+function sendControl(m1, m2) {
+    fetch(`/processcontrol?M1=${m1}&M2=${m2}`)
+        .catch(err => log(err));
+    labelLeft.innerText = `M1: ${m1}`;
+    labelRight.innerText = `M2: ${m2}`;
+}
+
+function stopAll() {
+    joystickLeft.value = 0;
+    joystickRight.value = 0;
+    sendControl(0,0);
+}
+
+async function updateStatus() {
+    let battery = '--'
+    let temperature = '--'
+    let status = '--';  // Try to keep status less than 9 characters total length to not resize the container
+
+    try {
+        const res = await fetch('/quickstatus');
+        if (res.ok) {   // If robot responded successful.
+            const data = await res.json();
+            battery = data.vIn.toFixed(2) + 'V';
+            temperature = data.temperature.toFixed(1) + '°C';
+
+            if (data.vIn > 4.5) {
+                status = '⚡ Charge';
+            } else {
+                status = '🔋 Battery';
+            }
+
+        } else {
+            status = '🌐 No Conn';
+        }
+
+    } catch (e) {
+        log("Error updating status: " + e);
+        status = '❗ Error';
+    }
+
+    document.getElementById('battery').innerText = battery;
+    document.getElementById('temp').innerText = temperature;
+    document.getElementById('status').innerText = status;
+}
+
+function updateRangeFromTouch(touch, element) {
+    // Note: touch.clientY starts with 0 at the top of the screen.
+    const elementHeight = element.clientHeight;
+    const elementYCenter = element.getBoundingClientRect().y + elementHeight / 2
+    const pixelDensityModifier = 512 / elementHeight;
+    let value = ((elementYCenter - touch.clientY) * pixelDensityModifier).toFixed(0);
+    if (value > 255) value = 255;
+    else if (value < -255) value = -255;
+    element.value = value;
+    return value;
+}
+
+function isTouchInsideElement(finger, element) {
+    const tolerance = 20;   // Little bit extra to account for the size of a finger.
+    const elmRect = element.getBoundingClientRect();
+    return finger.clientX >= (elmRect.x - tolerance) &&
+        finger.clientX <= (elmRect.x + elmRect.width + tolerance) &&
+        finger.clientY >= (elmRect.y - tolerance) &&
+        finger.clientY <= (elmRect.y + elmRect.height + tolerance);
+}
+
+// Touch handlers for mobile.
+joystickLeft.addEventListener('touchstart', (e) => {
+    log("Left touchstart handler fired.")
+    e.preventDefault();
+    leftFinger = e.targetTouches[e.targetTouches.length-1];   // Grab the newest touch.
+    updateRangeFromTouch(leftFinger, joystickLeft);
+});
+joystickRight.addEventListener('touchstart', (e) => {
+    log("Right touchstart handler fired.")
+    e.preventDefault();
+    rightFinger = e.targetTouches[e.targetTouches.length-1];   // Grab the newest touch.
+    updateRangeFromTouch(rightFinger, joystickRight);
+});
+document.addEventListener("touchmove", (e) => {
+    for (let currentFinger of e.changedTouches) {
+        const identifier = currentFinger.identifier;
+        log("finger identifier = " + identifier + ", left: " + leftFinger?.identifier + ", right: " + rightFinger?.identifier);
+        if (identifier === leftFinger?.identifier) {
+            log("touchmove handler for left finger.")
+            e.preventDefault();
+            updateRangeFromTouch(currentFinger, joystickLeft);
+        } else if (identifier === rightFinger?.identifier) {
+            log("touchmove handler for right finger.")
+            e.preventDefault();
+            updateRangeFromTouch(currentFinger, joystickRight);
+        } else if (leftFinger === null && isTouchInsideElement(currentFinger, joystickLeft)) {
+            log("touchmove capturing left finger.");
+            e.preventDefault();
+            leftFinger = currentFinger;
+            updateRangeFromTouch(currentFinger, joystickLeft);
+        } else if (rightFinger === null && isTouchInsideElement(currentFinger, joystickRight)) {
+            log("touchmove capturing right finger.");
+            e.preventDefault();
+            rightFinger = currentFinger;
+            updateRangeFromTouch(currentFinger, joystickRight);
+        } else {
+            log("touchmove handler for unclaimed finger.")
+        }
+    }
+})
+function handleTouchEnd(e) {
+    for (let currentFinger of e.changedTouches) {
+        const identifier = currentFinger.identifier;
+        if (identifier === leftFinger?.identifier) {
+            log("touchend handler for left finger.")
+            leftFinger = null;
+            e.preventDefault();
+        } else if (identifier === rightFinger?.identifier) {
+            log("touchend handler for right finger.")
+            rightFinger = null;
+            e.preventDefault();
+        } else {
+            log("touchend handler for unclaimed finger.")
+        }
+    }
+}
+document.addEventListener("touchend", handleTouchEnd)
+document.addEventListener("touchcancel", handleTouchEnd)
+
+stopAll()
+updateStatus();
+setInterval(updateStatus, 3000);
+setInterval(() => sendControl(joystickLeft.value, joystickRight.value), 200);
+
+</script>
+</body>
+</html>
