@@ -1,6 +1,6 @@
 ---
 title: Maintenance
-description: Update the firmware and perform a factory reset.
+description: Update the firmware and perform a system recovery.
 sidebar_position: 5
 ---
 
@@ -19,14 +19,14 @@ The current firmware version is shown on the home page. To update:
 Make sure the battery is fully charged before starting a firmware update. A power loss mid-flash can brick the board until you re-flash over USB.
 :::
 
-## Factory reset
+## System recovery
 
 If you forget the WiFi password:
 
 1. Turn the controller **OFF**.
 2. Short the **PGM** pins together (use a jumper wire or tweezers).
 3. Turn the controller **ON**.
-4. Wait for the factory reset tune.
+4. Wait for the systrem recovery tune.
 
 This restores the default SSID and password but does **not** restore deleted files. If system files are missing or damaged, reconnect the board to a computer and re-upload the filesystem image via PlatformIO.
 

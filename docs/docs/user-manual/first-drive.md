@@ -22,6 +22,8 @@ MootBot_xxxxxx
 
 where `xxxxxx` is a unique identifier for your board.
 
+If your board has a qr code you can scan it to connect as well.
+
 Your device may warn that the network has no internet access. Choose **Stay Connected** or **Use This Network Anyway** — the robot is a local access point, not an internet gateway.
 
 <Refdes id="HTTP">Step 3 — Open the browser</Refdes>
