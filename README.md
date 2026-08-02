@@ -17,7 +17,6 @@ Do you want a bot? If there are enough people in your area I will organise a big
 
 https://docs.google.com/forms/d/e/1FAIpQLSefcmKqDehQRFsC9WDCJS6LWhJCRrktLrYrf-59QBeeA0L29w/viewform?usp=publish-editor
 
-When Ive done with V3 of the board I will also make a link available on easyeda so you can order dirctly from them if you wish. you will however I think you will need to buy a minimum of 5 from there.
 
 ---
 

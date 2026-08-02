@@ -33,7 +33,7 @@ Connect both motors to the motor output headers.
 
 :::tip[Motor Polarity]
 
-Motor polarity is not critical - if the robot drives backwards later, swap the wires or invert the direction in your control page.
+Motor polarity is not critical - if the robot drives backwards later, swap the wires or invert the direction in the settings page.
 
 :::
 
@@ -45,14 +45,14 @@ These connections are strong and tight when new, so you may need to use a bit mo
 
 :::
 
-<Refdes id="S1">Step 4 — Connect the servo</Refdes>
+<Refdes id="S1">Step 4 — Connect the servo (optional)</Refdes>
 
-Plug the servo into one of the servo headers.
+Plug the servo into one of the servo headers. Servo1 is recommended. Using 2 servos will probably not work due to current draw.
 
 :::danger[Servo polarity matters]
 
 The brown or black wire must connect to the **square pad**. A reversed servo connector can burn out the servo.
-
+On the v3 board they are marked gnd(brown/black), hv(red), servo1(yellow/white).
 :::
 
 :::info[Struggling to connect it?]
