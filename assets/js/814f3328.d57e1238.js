@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["1833"],{5513(t){t.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Kijani at the 2nd Africa Scout Moot: 400 battle bots play soccer in Benoni","permalink":"/Kijani/blog/kijani-at-africa-scout-moot-2026","unlisted":false,"date":"2026-07-31T00:00:00.000Z"}]}')}}]);

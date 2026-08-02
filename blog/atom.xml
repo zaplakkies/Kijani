@@ -2,111 +2,75 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ithegi.github.io/Kijani/blog</id>
     <title>Kijani Blog</title>
-    <updated>2021-08-26T00:00:00.000Z</updated>
+    <updated>2026-07-31T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ithegi.github.io/Kijani/blog"/>
     <subtitle>Kijani Blog</subtitle>
     <icon>https://ithegi.github.io/Kijani/img/favicon.ico</icon>
     <entry>
-        <title type="html"><![CDATA[Welcome]]></title>
-        <id>https://ithegi.github.io/Kijani/blog/welcome</id>
-        <link href="https://ithegi.github.io/Kijani/blog/welcome"/>
-        <updated>2021-08-26T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Docusaurus blogging features are powered by the blog plugin.]]></summary>
-        <content type="html"><![CDATA[<p><a href="https://docusaurus.io/docs/blog" target="_blank" rel="noopener noreferrer" class="">Docusaurus blogging features</a> are powered by the <a href="https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog" target="_blank" rel="noopener noreferrer" class="">blog plugin</a>.</p>
-<p>Here are a few tips you might find useful.</p>
+        <title type="html"><![CDATA[Kijani at the 2nd Africa Scout Moot: 400 battle bots play soccer in Benoni]]></title>
+        <id>https://ithegi.github.io/Kijani/blog/kijani-at-africa-scout-moot-2026</id>
+        <link href="https://ithegi.github.io/Kijani/blog/kijani-at-africa-scout-moot-2026"/>
+        <updated>2026-07-31T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[From 1–8 August 2026, Rovers from across the continent are descending on Arrowe Park in Benoni, Johannesburg for the]]></summary>
+        <content type="html"><![CDATA[<div width="100%"><img src="https://ithegi.github.io/Kijani/assets/images/header-1f4aabfa592d03300c85452d15297827.png" alt="2nd Africa Scout Moot" style="width:100%;max-width:50vw"></div>
+<p>From <strong>1–8 August 2026</strong>, Rovers from across the continent are descending on Arrowe Park in Benoni, Johannesburg for the
+<strong>2nd Africa Scout Moot</strong> — and Kijani is coming with them. We're bringing <strong>400 boards</strong> for two days of robotics on
+<strong>Sunday 2 and Monday 3 August</strong>: robot soccer as the main event, with the arena open for pickup battles in the
+spare time between matches.</p>
 <!-- -->
-<p>Simply add Markdown files (or folders) to the <code>blog</code> directory.</p>
-<p>Regular blog authors can be added to <code>authors.yml</code>.</p>
-<p>The blog post date can be extracted from filenames, such as:</p>
-<ul>
-<li class=""><code>2019-05-30-welcome.md</code></li>
-<li class=""><code>2019-05-30-welcome/index.md</code></li>
-</ul>
-<p>A blog post folder can be convenient to co-locate blog post images:</p>
-<p><img decoding="async" loading="lazy" alt="Docusaurus Plushie" src="https://ithegi.github.io/Kijani/assets/images/docusaurus-plushie-banner-a60f7593abca1e3eef26a9afa244e4fb.jpeg" width="1500" height="500" class="img_aEUU"></p>
-<p>The blog supports tags as well!</p>
-<p><strong>And if you don't want a blog</strong>: just delete this directory, and use <code>blog: false</code> in your Docusaurus config.</p>]]></content>
+<h2 class="anchor anchorTargetStickyNavbar_A7He" id="phezulu-nangaphezulu">Phezulu Nangaphezulu<a href="https://ithegi.github.io/Kijani/blog/kijani-at-africa-scout-moot-2026#phezulu-nangaphezulu" class="hash-link" aria-label="Direct link to Phezulu Nangaphezulu" title="Direct link to Phezulu Nangaphezulu" translate="no">​</a></h2>
+<p>The Moot's theme — <em>Phezulu Nangaphezulu</em>, "higher and higher" — is a fitting one for a project built around the idea
+that a full combat robot shouldn't cost more than a pair of boots. The event promises outdoor adventure,
+workshops, cultural exchange, and service projects for Rovers from Scout organisations across Africa,
+and for two days of it, robotics is part of that mix.</p>
+<p>Kijani was designed for exactly this kind of setting: no soldering stations, no transmitter fleet to manage, no app
+to install. Each board carries its own motor drivers, servo outputs, LiPo charging, and a WiFi access point serving a
+browser-based control interface. A Rover connects a phone to the bot's network, opens <code>http://10.10.10.10</code>, and drives.</p>
+<h2 class="anchor anchorTargetStickyNavbar_A7He" id="why-soccer">Why soccer?<a href="https://ithegi.github.io/Kijani/blog/kijani-at-africa-scout-moot-2026#why-soccer" class="hash-link" aria-label="Direct link to Why soccer?" title="Direct link to Why soccer?" translate="no">​</a></h2>
+<p>Kijani was born as a battle bot platform, and battles are what we originally wanted to run at the Moot. The
+maths got in the way: we have one arena, and one arena can't feed 400 bots and a campsite full of Rovers. A soccer
+pitch, on the other hand, is anywhere you can mark two goals — and with the FIFA World Cup barely two weeks behind
+us, the timing writes itself. So the headline event is robot soccer: teams of Kijani bots, tank steering, and a
+ball that refuses to cooperate.</p>
+<p>The arena still comes with us, though. Battles are what the platform can do, and in the spare time between
+soccer matches, Rovers are welcome to settle things in it the old-fashioned way.</p>
+<h2 class="anchor anchorTargetStickyNavbar_A7He" id="what-400-boards-gets-you">What 400 boards gets you<a href="https://ithegi.github.io/Kijani/blog/kijani-at-africa-scout-moot-2026#what-400-boards-gets-you" class="hash-link" aria-label="Direct link to What 400 boards gets you" title="Direct link to What 400 boards gets you" translate="no">​</a></h2>
+<p>A few hundred boards at a single event opens up formats we've never been able to run at this scale before:</p>
+<div class="theme-admonition theme-admonition-note admonition_IXFY alert alert--secondary"><div class="admonitionHeading_r58P"><span class="admonitionIcon_rq2L"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>Robot soccer</div><div class="admonitionContent_gL0N"><p>The main event, running all of Sunday and Monday. Every pitch is just open ground and two goals, so
+we can run as many matches in parallel as there are teams to play them. Break a bot mid-match?
+Grab another board and get back on the field.</p></div></div>
+<div class="theme-admonition theme-admonition-tip admonition_IXFY alert alert--success"><div class="admonitionHeading_r58P"><span class="admonitionIcon_rq2L"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>The arena</div><div class="admonitionContent_gL0N"><p>One arena, first come first served, open between matches. The same board that plays striker becomes
+a flipper or a spinner — the difference is what you bolt on. Battles are where Kijani started, and
+the arena is where spare time goes to die.</p></div></div>
+<div class="theme-admonition theme-admonition-danger admonition_IXFY alert alert--danger"><div class="admonitionHeading_r58P"><span class="admonitionIcon_rq2L"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M5.05.31c.81 2.17.41 3.38-.52 4.31C3.55 5.67 1.98 6.45.9 7.98c-1.45 2.05-1.7 6.53 3.53 7.7-2.2-1.16-2.67-4.52-.3-6.61-.61 2.03.53 3.33 1.94 2.86 1.39-.47 2.3.53 2.27 1.67-.02.78-.31 1.44-1.13 1.81 3.42-.59 4.78-3.42 4.78-5.56 0-2.84-2.53-3.22-1.25-5.61-1.52.13-2.03 1.13-1.89 2.75.09 1.08-1.02 1.8-1.86 1.33-.67-.41-.66-1.19-.06-1.78C8.18 5.31 8.68 2.45 5.05.32L5.03.3l.02.01z"></path></svg></span>Hacking sessions</div><div class="admonitionContent_gL0N"><p>Because the entire robot is an open HTTP API,
+Rovers who've had enough of driving can write their own control pages in plain HTML and JavaScript,
+upload them to the bot's filesystem, and have the robot serve their UI.
+Anything that can make an HTTP request can drive a Kijani — a fact we fully expect participants to abuse
+in creative ways, on and off the pitch.</p></div></div>
+<div class="theme-admonition theme-admonition-info admonition_IXFY alert alert--info"><div class="admonitionHeading_r58P"><span class="admonitionIcon_rq2L"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg></span>Service and take-home</div><div class="admonitionContent_gL0N"><p>The Moot has a strong service-project component, and low-cost robotics kits
+that survive a weekend of soccer can seed robotics activities back home. A board that costs around R600 as a
+complete kit is a realistic thing for a contingent to carry back to their National Scout Organisation
+and build a programme around.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_A7He" id="why-the-moot">Why the Moot<a href="https://ithegi.github.io/Kijani/blog/kijani-at-africa-scout-moot-2026#why-the-moot" class="hash-link" aria-label="Direct link to Why the Moot" title="Direct link to Why the Moot" translate="no">​</a></h2>
+<p>Rover Moots gather 18-to-25-year-olds — precisely the group most likely to take a platform like this and
+run with it, whether that means mentoring younger Scouts, starting a local robot-soccer or combat league,
+or contributing firmware upstream. Everything about Kijani is open source, from the PCB to the
+C++/PlatformIO firmware to the stock web UI, so anything that gets built, broken, or improved in
+Benoni can flow straight back into the project.</p>
+<p>If you're attending the Moot, find us on the pitch on Sunday or Monday — or in the arena between matches.
+If you're a contingent leader and want to plan a session around the boards, reach out via the
+<a href="https://github.com/Ithegi/Kijani" target="_blank" rel="noopener noreferrer" class="">GitHub repository</a> before the event.</p>
+<p>See you at Arrowe Park. Phezulu Nangaphezulu — higher and higher.</p>]]></content>
         <author>
-            <name>Sébastien Lorber</name>
-            <uri>https://sebastienlorber.com</uri>
+            <name>Ryan Millard</name>
+            <uri>https://github.com/Ryan-Millard</uri>
         </author>
-        <author>
-            <name>Yangshun Tay</name>
-            <uri>https://linkedin.com/in/yangshun</uri>
-        </author>
-        <category label="Facebook" term="Facebook"/>
-        <category label="Hello" term="Hello"/>
-        <category label="Docusaurus" term="Docusaurus"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MDX Blog Post]]></title>
-        <id>https://ithegi.github.io/Kijani/blog/mdx-blog-post</id>
-        <link href="https://ithegi.github.io/Kijani/blog/mdx-blog-post"/>
-        <updated>2021-08-01T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Blog posts support Docusaurus Markdown features, such as MDX.]]></summary>
-        <content type="html"><![CDATA[<p>Blog posts support <a href="https://docusaurus.io/docs/markdown-features" target="_blank" rel="noopener noreferrer" class="">Docusaurus Markdown features</a>, such as <a href="https://mdxjs.com/" target="_blank" rel="noopener noreferrer" class="">MDX</a>.</p>
-<div class="theme-admonition theme-admonition-tip admonition_IXFY alert alert--success"><div class="admonitionHeading_r58P"><span class="admonitionIcon_rq2L"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>tip</div><div class="admonitionContent_gL0N"><p>Use the power of React to create interactive blog posts.</p></div></div>
-<!-- -->
-<p>For example, use JSX to create an interactive button:</p>
-<div class="language-js codeBlockContainer_N0q7 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent__5sw"><pre tabindex="0" class="prism-code language-js codeBlock_n74L thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_DS3n"><div class="token-line" style="color:#393A34"><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">button onClick</span><span class="token operator" style="color:#393A34">=</span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token arrow operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">alert</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'button clicked!'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">}</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token maybe-class-name">Click</span><span class="token plain"> me</span><span class="token operator" style="color:#393A34">!</span><span class="token operator" style="color:#393A34">&lt;</span><span class="token operator" style="color:#393A34">/</span><span class="token plain">button</span><span class="token operator" style="color:#393A34">&gt;</span><br></div></code></pre></div></div>
-<button>Click me!</button>]]></content>
-        <author>
-            <name>Sébastien Lorber</name>
-            <uri>https://sebastienlorber.com</uri>
-        </author>
-        <category label="Docusaurus" term="Docusaurus"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Long Blog Post]]></title>
-        <id>https://ithegi.github.io/Kijani/blog/long-blog-post</id>
-        <link href="https://ithegi.github.io/Kijani/blog/long-blog-post"/>
-        <updated>2019-05-29T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[This is the summary of a very long blog post,]]></summary>
-        <content type="html"><![CDATA[<p>This is the summary of a very long blog post,</p>
-<p>Use a <code>{/*</code> <code>truncate</code> <code>*/}</code> comment to limit blog post size in the list view.</p>
-<!-- -->
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>]]></content>
-        <author>
-            <name>Yangshun Tay</name>
-            <uri>https://linkedin.com/in/yangshun</uri>
-        </author>
-        <category label="Hello" term="Hello"/>
-        <category label="Docusaurus" term="Docusaurus"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[First Blog Post]]></title>
-        <id>https://ithegi.github.io/Kijani/blog/first-blog-post</id>
-        <link href="https://ithegi.github.io/Kijani/blog/first-blog-post"/>
-        <updated>2019-05-28T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Lorem ipsum dolor sit amet...]]></summary>
-        <content type="html"><![CDATA[<p>Lorem ipsum dolor sit amet...</p>
-<!-- -->
-<p>...consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>]]></content>
-        <author>
-            <name>Sébastien Lorber</name>
-            <uri>https://sebastienlorber.com</uri>
-        </author>
-        <author>
-            <name>Yangshun Tay</name>
-            <uri>https://linkedin.com/in/yangshun</uri>
-        </author>
-        <category label="Hola" term="Hola"/>
-        <category label="Docusaurus" term="Docusaurus"/>
+        <category label="Kijani" term="Kijani"/>
+        <category label="Events" term="Events"/>
+        <category label="Robotics" term="Robotics"/>
+        <category label="Education" term="Education"/>
+        <category label="Scouting" term="Scouting"/>
+        <category label="South Africa" term="South Africa"/>
     </entry>
 </feed>
