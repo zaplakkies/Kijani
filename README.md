@@ -1,6 +1,6 @@
 # Kijani Battle Bot Platform
 
-![Kijani Logo](images/portratclose.png)
+![Kijani Logo](https://github.com/user-attachments/assets/768132c3-deda-4b90-bbd4-2619247bbfce)
 
 An open-source ESP32-based battle robot platform designed for affordable combat robots, educational robotics, and custom remote-controlled projects.
 
@@ -11,6 +11,7 @@ Built for:
 - Custom web-controlled robots
 
 ---
+
 # Order a bot?
 
 Do you want a bot? If there are enough people in your area I will organise a big buy and ship to you. Please fill out the google form so we know what interest is in what areas. We will look at the results in august and contact everyone who filled in the form as well as possibly make an order form here. We estimate the full kit will be around R600 for a bot with assembled pcb, battery n20 motors and servo
@@ -23,10 +24,10 @@ https://docs.google.com/forms/d/e/1FAIpQLSefcmKqDehQRFsC9WDCJS6LWhJCRrktLrYrf-59
 # 📸 Project Photos
 
 ## PCB Front
-![PCB Front](images/pcbv2explination.png)
+![PCB Front](https://github.com/user-attachments/assets/453e342c-25a9-443a-96cb-e40b1570fd1f)
 
 ## PCB Back
-![PCB Back](images/pcbv2bot.png)
+![PCB Back](https://github.com/user-attachments/assets/e4c47851-737e-46eb-8aa4-cb9382c4f4c0)
 
 ---
 

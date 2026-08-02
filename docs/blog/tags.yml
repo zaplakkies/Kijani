@@ -1,19 +1,29 @@
-facebook:
-  label: Facebook
-  permalink: /facebook
-  description: Facebook tag description
+kijani:
+  label: Kijani
+  permalink: /kijani
+  description: News and updates about the Kijani ESP32 battle bot platform
 
-hello:
-  label: Hello
-  permalink: /hello
-  description: Hello tag description
+events:
+  label: Events
+  permalink: /events
+  description: Events, workshops, and gatherings where Kijani shows up
 
-docusaurus:
-  label: Docusaurus
-  permalink: /docusaurus
-  description: Docusaurus tag description
+robotics:
+  label: Robotics
+  permalink: /robotics
+  description: Combat robotics and general robotics content
 
-hola:
-  label: Hola
-  permalink: /hola
-  description: Hola tag description
+education:
+  label: Education
+  permalink: /education
+  description: STEM education and learning with Kijani
+
+scouting:
+  label: Scouting
+  permalink: /scouting
+  description: Scouting events and community involvement
+
+south-africa:
+  label: South Africa
+  permalink: /south-africa
+  description: Kijani activity in South Africa

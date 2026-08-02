@@ -1,0 +1,94 @@
+---
+slug: kijani-at-africa-scout-moot-2026
+title: "Kijani at the 2nd Africa Scout Moot: 400 battle bots play soccer in Benoni"
+authors: [ryan-millard]
+tags: [kijani, events, robotics, education, scouting, south-africa]
+---
+
+import header from "./img/header.png";
+
+<div width="100%">
+	<img src={header} alt="2nd Africa Scout Moot" style={{ width: "100%", maxWidth: "50vw" }} />
+</div>
+
+From **1–8 August 2026**, Rovers from across the continent are descending on Arrowe Park in Benoni, Johannesburg for the
+**2nd Africa Scout Moot** — and Kijani is coming with them. We're bringing **400 boards** for two days of robotics on
+**Sunday 2 and Monday 3 August**: robot soccer as the main event, with the arena open for pickup battles in the
+spare time between matches.
+
+{/* truncate */}
+
+## Phezulu Nangaphezulu
+
+The Moot's theme — *Phezulu Nangaphezulu*, "higher and higher" — is a fitting one for a project built around the idea
+that a full combat robot shouldn't cost more than a pair of boots. The event promises outdoor adventure,
+workshops, cultural exchange, and service projects for Rovers from Scout organisations across Africa,
+and for two days of it, robotics is part of that mix.
+
+Kijani was designed for exactly this kind of setting: no soldering stations, no transmitter fleet to manage, no app
+to install. Each board carries its own motor drivers, servo outputs, LiPo charging, and a WiFi access point serving a
+browser-based control interface. A Rover connects a phone to the bot's network, opens `http://10.10.10.10`, and drives.
+
+## Why soccer?
+
+Kijani was born as a battle bot platform, and battles are what we originally wanted to run at the Moot. The
+maths got in the way: we have one arena, and one arena can't feed 400 bots and a campsite full of Rovers. A soccer
+pitch, on the other hand, is anywhere you can mark two goals — and with the FIFA World Cup barely two weeks behind
+us, the timing writes itself. So the headline event is robot soccer: teams of Kijani bots, tank steering, and a
+ball that refuses to cooperate.
+
+The arena still comes with us, though. Battles are what the platform can do, and in the spare time between
+soccer matches, Rovers are welcome to settle things in it the old-fashioned way.
+
+## What 400 boards gets you
+
+A few hundred boards at a single event opens up formats we've never been able to run at this scale before:
+
+:::note[Robot soccer]
+
+The main event, running all of Sunday and Monday. Every pitch is just open ground and two goals, so
+we can run as many matches in parallel as there are teams to play them. Break a bot mid-match?
+Grab another board and get back on the field.
+
+:::
+
+:::tip[The arena]
+
+One arena, first come first served, open between matches. The same board that plays striker becomes
+a flipper or a spinner — the difference is what you bolt on. Battles are where Kijani started, and
+the arena is where spare time goes to die.
+
+:::
+
+:::danger[Hacking sessions]
+
+Because the entire robot is an open HTTP API,
+Rovers who've had enough of driving can write their own control pages in plain HTML and JavaScript,
+upload them to the bot's filesystem, and have the robot serve their UI.
+Anything that can make an HTTP request can drive a Kijani — a fact we fully expect participants to abuse
+in creative ways, on and off the pitch.
+
+:::
+
+:::info[Service and take-home]
+
+The Moot has a strong service-project component, and low-cost robotics kits
+that survive a weekend of soccer can seed robotics activities back home. A board that costs around R600 as a
+complete kit is a realistic thing for a contingent to carry back to their National Scout Organisation
+and build a programme around.
+
+:::
+
+## Why the Moot
+
+Rover Moots gather 18-to-25-year-olds — precisely the group most likely to take a platform like this and
+run with it, whether that means mentoring younger Scouts, starting a local robot-soccer or combat league,
+or contributing firmware upstream. Everything about Kijani is open source, from the PCB to the
+C++/PlatformIO firmware to the stock web UI, so anything that gets built, broken, or improved in
+Benoni can flow straight back into the project.
+
+If you're attending the Moot, find us on the pitch on Sunday or Monday — or in the arena between matches.
+If you're a contingent leader and want to plan a session around the boards, reach out via the
+[GitHub repository](https://github.com/Ithegi/Kijani) before the event.
+
+See you at Arrowe Park. Phezulu Nangaphezulu — higher and higher.

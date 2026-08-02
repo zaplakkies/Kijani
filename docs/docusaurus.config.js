@@ -91,7 +91,7 @@ const config = {
 			title: 'Kijani',
 			logo: {
 				alt: 'Kijani Logo',
-				src: 'img/logo.svg',
+				src: 'img/logo.webp',
 			},
 			items: [
 				{
@@ -157,32 +157,15 @@ const config = {
 					items: [
 						{
 							label: 'Stack Overflow',
-							href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+							href: 'https://stackoverflow.com/questions/tagged/kijani',
 						},
-						{
-							label: 'Discord',
-							href: 'https://discordapp.com/invite/docusaurus',
-						},
-						{
-							label: 'X',
-							href: 'https://x.com/docusaurus',
-						},
-					],
-				},
-				{
-					title: 'Community',
-					items: [
-						{
-							label: 'Stack Overflow',
-							href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-						},
-						{
-							label: 'Discord',
-							href: 'https://discordapp.com/invite/docusaurus',
-						},
+						//{
+							//label: 'Discord',
+							//href: 'https://discordapp.com/invite/kijani',
+						//},
 						{
 							label: 'X',
-							href: 'https://x.com/docusaurus',
+							href: 'https://x.com/kijani',
 						},
 					],
 				},
@@ -200,7 +183,7 @@ const config = {
 					],
 				},
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+			copyright: `Copyright © ${new Date().getFullYear()} Kijani`,
 		},
 		prism: {
 			theme: prismThemes.github,
