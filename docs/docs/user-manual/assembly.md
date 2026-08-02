@@ -33,7 +33,7 @@ Connect both motors to the motor output headers.
 
 :::tip[Motor Polarity]
 
-Motor polarity is not critical - if the robot drives backwards later, swap the wires or invert the direction in the setting page.
+Motor polarity is not critical - if the robot drives backwards later, swap the wires or invert the direction in the settings page.
 
 :::
 
