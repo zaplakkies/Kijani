@@ -10,145 +10,203 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Kijani',
-  tagline: 'An affordable custom ESP32-based robot designed for custom remote-controlled projects.',
-  favicon: 'img/favicon.ico',
+	title: 'Kijani',
+	tagline: 'An affordable custom ESP32-based robot designed for custom remote-controlled projects.',
+	favicon: 'img/favicon.ico',
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
-  future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
-  },
+	// Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+	future: {
+		v4: true, // Improve compatibility with the upcoming Docusaurus v4
+	},
 
-  url: 'https://ithegi.github.io',
-  baseUrl: '/Kijani/',
-  organizationName: 'Ithegi',
-  projectName: 'Kijani',
-  deploymentBranch: 'gh-pages',
+	url: 'https://ithegi.github.io',
+	baseUrl: '/Kijani/',
+	organizationName: 'Ithegi',
+	projectName: 'Kijani',
+	deploymentBranch: 'gh-pages',
 
-  onBrokenLinks: 'throw',
+	onBrokenLinks: 'throw',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-  },
+	// Even if you don't use internationalization, you can use this field to set
+	// useful metadata like html lang. For example, if your site is Chinese, you
+	// may want to replace "en" with "zh-Hans".
+	i18n: {
+		defaultLocale: 'en',
+		locales: ['en'],
+	},
 
-  presets: [
-    [
-      'classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
-        docs: {
-          sidebarPath: './sidebars.js',
-          editUrl: 'https://github.com/Ithegi/Kijani/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          editUrl: 'https://github.com/Ithegi/Kijani/tree/main/packages/create-docusaurus/templates/shared/',
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
-        theme: {
-          customCss: './src/css/custom.css',
-        },
-      }),
-    ],
-  ],
+	presets: [
+		[
+			'classic',
+			{
+				docs: false, // disable default docs plugin
+				blog: {
+					showReadingTime: true,
+					feedOptions: {
+						type: ['rss', 'atom'],
+						xslt: true,
+					},
+					editUrl: 'https://github.com/Ithegi/Kijani/tree/main/packages/create-docusaurus/templates/shared/',
+					onInlineTags: 'warn',
+					onInlineAuthors: 'warn',
+					onUntruncatedBlogPosts: 'warn',
+				},
+				theme: {
+					customCss: './src/css/custom.css',
+				},
+			},
+		],
+	],
 
-  themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
-		announcementBar: {
-			id: 'support_us', // change when you want to dismiss/reset it
-			content:
-			'🚧 This site is under active development. Expect changes. This documentation site has not been finalized. As a result, this site explains how to use Docusaurus - the documentation technology we use.',
-			backgroundColor: '#ff000d',
-			textColor: '#ffffff',
-			isCloseable: true,
+	plugins: [
+		...['software', 'hardware', 'user-manual'].map((id) => [
+			'@docusaurus/plugin-content-docs',
+			{
+				id,
+				path: `docs/${id}`,
+				routeBasePath: `docs/${id}`,
+				sidebarPath: `./sidebars/${id}.js`,
+			},
+		]),
+	],
+
+	themeConfig:
+	/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+	({
+		//Kept here to make future announcements simpler
+		//announcementBar: {
+		//id: 'support_us', // change when you want to dismiss/reset it
+		//content:
+		//'🚧 This site is under active development. Expect changes.',
+		//backgroundColor: '#fec901',
+		//textColor: '#010000',
+		//isCloseable: true,
+		//},
+		// Replace with your project's social card
+		image: 'img/docusaurus-social-card.jpg',
+		colorMode: {
+			respectPrefersColorScheme: true,
 		},
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
-      colorMode: {
-        respectPrefersColorScheme: true,
-      },
-      navbar: {
-        title: 'Kijani',
-        logo: {
-          alt: 'Kijani Logo',
-          src: 'img/logo.svg',
-        },
-        items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Tutorial',
-          },
-          {to: '/blog', label: 'Blog', position: 'left'},
-          {
-            href: 'https://github.com/Ithegi/Kijani',
-            label: 'GitHub',
-            position: 'right',
-          },
-        ],
-      },
-      footer: {
-        style: 'dark',
-        links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Tutorial',
-                to: '/docs/intro',
-              },
-            ],
-          },
-		  {
-			title: 'Community',
+		navbar: {
+			title: 'Kijani',
+			logo: {
+				alt: 'Kijani Logo',
+				src: 'img/logo.svg',
+			},
 			items: [
-			  {
-				label: 'Stack Overflow',
-				href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-			  },
-			  {
-				label: 'Discord',
-				href: 'https://discordapp.com/invite/docusaurus',
-			  },
-			  {
-				label: 'X',
-				href: 'https://x.com/docusaurus',
-			  },
+				{
+					to: '/',
+					label: 'Home',
+					position: 'left',
+				},
+				{
+					label: 'Docs',
+					position: 'left',
+					items: [
+						{
+							type: 'docSidebar',
+							sidebarId: 'userManualSidebar',
+							docsPluginId: 'user-manual',
+							label: 'User Manual',
+						},
+						{
+							type: 'docSidebar',
+							sidebarId: 'softwareSidebar',
+							docsPluginId: 'software',
+							label: 'Software',
+						},
+						{
+							type: 'docSidebar',
+							sidebarId: 'hardwareSidebar',
+							docsPluginId: 'hardware',
+							label: 'Hardware',
+						},
+					],
+				},
+				{to: '/blog', label: 'Blog', position: 'left'},
+				{to: '/about', label: 'About', position: 'left'},
+				{
+					href: 'https://github.com/Ithegi/Kijani',
+					label: 'GitHub',
+					position: 'right',
+				},
 			],
-		  },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/Ithegi/Kijani',
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-      },
-      prism: {
-        theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
-      },
-    }),
+		},
+		footer: {
+			style: 'dark',
+			links: [
+				{
+					title: 'Docs',
+					items: [
+						{
+							label: 'User Manual',
+							to: '/docs/user-manual',
+						},
+						{
+							label: 'Software',
+							to: '/docs/software',
+						},
+						{
+							label: 'Hardware',
+							to: '/docs/hardware',
+						},
+					],
+				},
+				{
+					title: 'Community',
+					items: [
+						{
+							label: 'Stack Overflow',
+							href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+						},
+						{
+							label: 'Discord',
+							href: 'https://discordapp.com/invite/docusaurus',
+						},
+						{
+							label: 'X',
+							href: 'https://x.com/docusaurus',
+						},
+					],
+				},
+				{
+					title: 'Community',
+					items: [
+						{
+							label: 'Stack Overflow',
+							href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+						},
+						{
+							label: 'Discord',
+							href: 'https://discordapp.com/invite/docusaurus',
+						},
+						{
+							label: 'X',
+							href: 'https://x.com/docusaurus',
+						},
+					],
+				},
+				{
+					title: 'More',
+					items: [
+						{
+							label: 'Blog',
+							to: '/blog',
+						},
+						{
+							label: 'GitHub',
+							href: 'https://github.com/Ithegi/Kijani',
+						},
+					],
+				},
+			],
+			copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+		},
+		prism: {
+			theme: prismThemes.github,
+			darkTheme: prismThemes.dracula,
+		},
+	}),
 };
 
 export default config;

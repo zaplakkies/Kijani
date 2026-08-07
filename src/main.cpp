@@ -14,8 +14,8 @@
 #include <ESPAsyncWebServer.h>
 #include <Update.h>
 
-#define version "kijani_v3.03b"
-#define versiondate "2026-06-11"
+#define version "kijani_v3.04b"
+#define versiondate "2026-07-29"
 
 Preferences preferences;
 AsyncWebServer server(80);
@@ -30,7 +30,8 @@ AsyncWebServer server(80);
 #define MotorB2 26
 #define servo1Pin 27
 #define servo2Pin 14
-#define Vmod 15
+#define Vmod1 15
+#define Vmod2 13
 #define pgm 5 // factory reset pin
 #define statled 2 //status led
 Servo servo1;
@@ -43,6 +44,8 @@ int freq = 1000;
 
 TaskHandle_t Task1; // motor and pins task
 TaskHandle_t Task2; // radio tasks
+
+long beeptime=0;
 
 float battvoltage = 0;
 float temperature = 0;
@@ -59,6 +62,20 @@ String startup = "Jingle:d=4,o=5,b=100:8b,16d6,16c6,8e6";
 String test = "Scale:d=4,o=5,b=120:c,d,e,f,g,a,b,c6";
 const char *testbutton = "SouthAfr:d=16,o=5,b=100:8g,8g,8g,8a,4b,4b,4a,4a,4g,4p,8b,8b,8b,8b,4c6,4c6,8b,8b,4b,4a,4p,8g,8g,8g,8a,4b,4b,4a,4c6,4b,4p,4a,4p,4g,4p,8f#,8g,4a,4g";
 
+//Settings default
+String MaxMotor1 = "100";
+int maxmotor1 = 100;
+String MaxMotor2 = "100";
+int maxmotor2 = 100;
+String SwapMotors = "false";
+boolean swapmotors = false;
+String SwapDirectionMotor1 = "false";
+boolean swapdirectionmotor1 = false;
+String SwapDirectionMotor2 = "false";
+boolean swapdirectionmotor2 = false;
+String BoostLevel = "1";
+int boostlevel = 1;
+       
 volatile unsigned long ledFlickerUntil = 0;
 enum LedState
 {
@@ -104,6 +121,7 @@ void loadsettings()
 {
   preferences.begin("settings", true);
   AP = preferences.getString("AP", AP);
+
   APpass = preferences.getString("APpass", APpass);
   startup = preferences.getString(
       "startupTune",
@@ -113,7 +131,72 @@ void loadsettings()
       "0.02352");
   calibrationFactor = temp.toFloat();
 
+  MaxMotor1 = preferences.getString("MaxMotor1", MaxMotor1);
+  maxmotor1 = MaxMotor1.toInt();
+  if (maxmotor1>100 or maxmotor1<0) {
+    maxmotor1 = 100;
+  }
+  MaxMotor2 = preferences.getString("MaxMotor2", MaxMotor2);
+  maxmotor2 = MaxMotor2.toInt();
+  if (maxmotor2>100 or maxmotor2<0) {
+    maxmotor2 = 100;
+  }
+  SwapMotors = preferences.getString("SwapMotors", SwapMotors);
+  swapmotors =  (SwapMotors.length() && tolower(SwapMotors[0]) == 't');
+  SwapDirectionMotor1 = preferences.getString("SwapDMotor1", SwapDirectionMotor1);
+  swapdirectionmotor1 =  (SwapDirectionMotor1.length() && tolower(SwapDirectionMotor1[0]) == 't');
+  SwapDirectionMotor2 = preferences.getString("SwapDMotor2", SwapDirectionMotor2);
+  swapdirectionmotor2 =  (SwapDirectionMotor2.length() && tolower(SwapDirectionMotor2[0]) == 't');
+  BoostLevel = preferences.getString("BoostLevel", BoostLevel);
+  boostlevel = BoostLevel.toInt();
+  if (boostlevel>4 or boostlevel<1) {
+    boostlevel = 1;
+  }
+  switch (boostlevel) {
+    case 1:  //5v
+        pinMode(Vmod1, INPUT); 
+        pinMode(Vmod2, INPUT); 
+        break;
+    case 2:  //6v
+        pinMode(Vmod1, OUTPUT); 
+        digitalWrite(Vmod1, LOW);
+        pinMode(Vmod2, INPUT); 
+        break;
+    case 3:  //8v
+        pinMode(Vmod1, INPUT); 
+        pinMode(Vmod2, OUTPUT); 
+        digitalWrite(Vmod2, LOW);
+        
+        break;
+    case 4:  //9v
+        pinMode(Vmod1, OUTPUT); 
+        digitalWrite(Vmod1, LOW);
+        pinMode(Vmod2, OUTPUT); 
+        digitalWrite(Vmod2, LOW); 
+        break;
+
+    default:
+        pinMode(Vmod1, INPUT); 
+        pinMode(Vmod2, INPUT); 
+
+}
   preferences.end();
+  Serial.println("----- Settings -----");
+  Serial.printf("AP                     : %s\n", AP.c_str());
+  Serial.printf("APpass                 : %s\n", APpass.c_str());
+  Serial.printf("startupTune            : %s\n", startup.c_str());
+  Serial.printf("batteryCalibration     : %.5f\n", calibrationFactor);
+
+  Serial.printf("MaxMotor1              : %d\n", maxmotor1);
+  Serial.printf("MaxMotor2              : %d\n", maxmotor2);
+
+  Serial.printf("SwapMotors             : %s\n", swapmotors ? "true" : "false");
+  Serial.printf("SwapDirectionMotor1    : %s\n", swapdirectionmotor1 ? "true" : "false");
+  Serial.printf("SwapDirectionMotor2    : %s\n", swapdirectionmotor2 ? "true" : "false");
+
+  Serial.printf("BoostLevel             : %d\n", boostlevel);
+  Serial.println("--------------------");
+
 }
 
 void storesetting(String value, String key)
@@ -132,157 +215,28 @@ void storesetting(String value, String key)
   Serial.println("finished stopring");
 }
 int getbattery()
-{  //TODO: make this a rolling buffer and ignore 0 reads
-  int adcValue = analogRead(36);
-  return adcValue * calibrationFactor * 1000;
-}
-void updateStatusLed()
 {
-  // Determine state
-  if (getbattery() > 4500 )
-  {
-    ledState = LED_CHARGING;
-  }
-  else if (WiFi.status() == WL_CONNECTED)
-  {
-    ledState = LED_CONNECTED;
-  }
-  else
-  {
-    ledState = LED_NO_WIFI;
-  }
+    static float filtered = 0;
+    static bool initialized = false;
 
-  unsigned long now = millis();
+    int reading = analogRead(36);
 
-  switch (ledState)
-  {
-    case LED_CHARGING:
-      // Fast heartbeat (200ms)
-      if (now - lastLedChange > 200)
-      {
-        lastLedChange = now;
-        ledOutput = !ledOutput;
-        digitalWrite(statled, ledOutput);
-      }
-      break;
-
-    case LED_NO_WIFI:
-      // Slow heartbeat (1000ms)
-      if (now - lastLedChange > 1000)
-      {
-        lastLedChange = now;
-        ledOutput = !ledOutput;
-        digitalWrite(statled, ledOutput);
-      }
-      break;
-
-    case LED_CONNECTED:
-
-      if (millis() < ledFlickerUntil)
-      {
-        digitalWrite(statled, LOW);
-      }
-      else
-      {
-        digitalWrite(statled, HIGH);
-      }
-      break;
-  }
-}
-
-void processItem(const String &item)
-{
-  // Split by colon to get name and data
-  int delimiterPos = item.indexOf(':');
-  if (delimiterPos == -1)
-  {
-    Serial.println("Malformed data item: " + item);
-    return;
-  }
-
-  String name = item.substring(0, delimiterPos);
-  String value = item.substring(delimiterPos + 1);
-
-  // Handle each item based on its name
-  if (name == "M1")
-  {
-    int speed = value.toInt();
-    Serial.print("Set M1: ");
-    Serial.println(speed);
-    if (abs(speed) < 5)
+    // Ignore invalid readings
+    if (reading > 0)
     {
-      speed = 0;
+        if (!initialized)
+        {
+            filtered = reading;
+            initialized = true;
+        }
+        else
+        {
+            const float alpha = 0.1f;   // Lower = smoother
+            filtered = filtered * (1.0f - alpha) + reading * alpha;
+        }
     }
-    // get direction
-    if (speed >= 0)
-    {
-      digitalWrite(MotorA2, LOW);
-      ledcWrite(MotorA1, speed);
-    }
-    else
-    {
-      digitalWrite(MotorA2, HIGH);
-      ledcWrite(MotorA1, 255 + speed);
-    }
-  }
-  else if (name == "M2")
-  {
-    int speed = value.toInt();
-    Serial.print("Set M2: ");
-    Serial.println(speed);
-    if (abs(speed) < 5)
-    {
-      speed = 0;
-    }
-    // get direction
-    if (speed >= 0)
-    {
-      digitalWrite(MotorB2, LOW);
-      ledcWrite(MotorB1, speed);
-    }
-    else
-    {
-      digitalWrite(MotorB2, HIGH);
-      ledcWrite(MotorB1, 255 + speed);
-    }
-  }
-  else if (name == "S1")
-  {
-    int speed = value.toInt();
-    Serial.print("Set S1: ");
-    Serial.println(speed);
-    servo1.write(speed);
-  }
-  else if (name == "S2")
-  {
-    int speed = value.toInt();
-    Serial.print("Set S2: ");
-    Serial.println(speed);
-    servo2.write(speed);
-  }
-  else if (name == "estop")
-  {
-    bool estopOn = (value == "on");
-    Serial.print("estop has been set to ");
-    Serial.println(estopOn ? "ON" : "OFF");
-    ledcWrite(MotorA1, 0);
-    ledcWrite(MotorB1, 0);
-    digitalWrite(MotorA2, LOW);
-    digitalWrite(MotorB2, LOW);
-  }
 
-  else
-  {
-    Serial.println("Unknown name: " + name);
-    Serial.println("got: " + item);
-  }
-}
-
-void setMotorSpeed(int speed, int direction)
-{
-  speed = constrain(speed, 0, 255); // Limit speed to valid range
-  digitalWrite(MotorA2, direction);
-  ledcWrite(0, speed); // Set PWM duty cycle
+    return filtered * calibrationFactor * 1000;
 }
 void playTone(int frequency, int duration_ms)
 {
@@ -307,6 +261,7 @@ void playTone(int frequency, int duration_ms)
   digitalWrite(MotorA1, LOW);
   digitalWrite(MotorA2, LOW);
 }
+
 void playRTTTL(const char *p)
 {
   int default_dur = 4;
@@ -468,6 +423,160 @@ void playRTTTL(const char *p)
   ledcAttach(MotorA1, 5000, 8);
 }
 
+
+void updateStatusLed()
+{
+  // Determine state
+  if (getbattery() > 4500 )
+  {
+    ledState = LED_CHARGING;
+  }
+  else if (WiFi.softAPgetStationNum() > 0)
+  {
+    ledState = LED_CONNECTED;
+  }
+  else
+  {
+    ledState = LED_NO_WIFI;
+  }
+
+  unsigned long now = millis();
+
+  switch (ledState)
+  {
+    case LED_CHARGING:
+      // Fast heartbeat (200ms)
+      if (now - lastLedChange > 200)
+      {
+        lastLedChange = now;
+        ledOutput = !ledOutput;
+        digitalWrite(statled, ledOutput);
+      }
+      break;
+
+    case LED_NO_WIFI:
+      // Slow heartbeat (1000ms)
+      if (now - lastLedChange > 1000)
+      {
+        lastLedChange = now;
+        ledOutput = !ledOutput;
+        digitalWrite(statled, ledOutput);
+      }
+      if (millis() > beeptime) {
+        playRTTTL("beep:d=4,o=5,b=400:c,c,c");
+        beeptime = millis()+10000;
+      }
+      break;
+
+    case LED_CONNECTED:
+
+      if (millis() < ledFlickerUntil)
+      {
+        digitalWrite(statled, LOW);
+      }
+      else
+      {
+        digitalWrite(statled, HIGH);
+      }
+      break;
+  }
+}
+
+// void processItem(const String &item)
+// {
+//   // Split by colon to get name and data
+//   int delimiterPos = item.indexOf(':');
+//   if (delimiterPos == -1)
+//   {
+//     Serial.println("Malformed data item: " + item);
+//     return;
+//   }
+
+//   String name = item.substring(0, delimiterPos);
+//   String value = item.substring(delimiterPos + 1);
+
+//   // Handle each item based on its name
+//   if (name == "M1")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set M1: ");
+//     Serial.println(speed);
+//     if (abs(speed) < 5)
+//     {
+//       speed = 0;
+//     }
+//     // get direction
+//     if (speed >= 0)
+//     {
+//       digitalWrite(MotorA2, LOW);
+//       ledcWrite(MotorA1, speed);
+//     }
+//     else
+//     {
+//       digitalWrite(MotorA2, HIGH);
+//       ledcWrite(MotorA1, 255 + speed);
+//     }
+//   }
+//   else if (name == "M2")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set M2: ");
+//     Serial.println(speed);
+//     if (abs(speed) < 5)
+//     {
+//       speed = 0;
+//     }
+//     // get direction
+//     if (speed >= 0)
+//     {
+//       digitalWrite(MotorB2, LOW);
+//       ledcWrite(MotorB1, speed);
+//     }
+//     else
+//     {
+//       digitalWrite(MotorB2, HIGH);
+//       ledcWrite(MotorB1, 255 + speed);
+//     }
+//   }
+//   else if (name == "S1")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set S1: ");
+//     Serial.println(speed);
+//     servo1.write(speed);
+//   }
+//   else if (name == "S2")
+//   {
+//     int speed = value.toInt();
+//     Serial.print("Set S2: ");
+//     Serial.println(speed);
+//     servo2.write(speed);
+//   }
+//   else if (name == "estop")
+//   {
+//     bool estopOn = (value == "on");
+//     Serial.print("estop has been set to ");
+//     Serial.println(estopOn ? "ON" : "OFF");
+//     ledcWrite(MotorA1, 0);
+//     ledcWrite(MotorB1, 0);
+//     digitalWrite(MotorA2, LOW);
+//     digitalWrite(MotorB2, LOW);
+//   }
+
+//   else
+//   {
+//     Serial.println("Unknown name: " + name);
+//     Serial.println("got: " + item);
+//   }
+// }
+
+void setMotorSpeed(int speed, int direction)
+{
+  speed = constrain(speed, 0, 255); // Limit speed to valid range
+  digitalWrite(MotorA2, direction);
+  ledcWrite(0, speed); // Set PWM duty cycle
+}
+
 void setup()
 {
   // setup the debug out comms
@@ -484,9 +593,15 @@ void setup()
   pinMode(en8v, OUTPUT);
   pinMode(en5v, OUTPUT);
   pinMode(dvrsleep, OUTPUT);
-  pinMode(Vmod, OUTPUT);
-  digitalWrite(Vmod, LOW);  //TODO: add this as a setting output low makes it 6v
-  pinMode(Vmod, INPUT); //inout makes it 5v, this should be the default
+  // pinMode(Vmod, OUTPUT);
+  // digitalWrite(Vmod, LOW);  //TODO: add this as a setting output low makes it 6v
+  pinMode(Vmod1, INPUT); //inout makes it 5v, this should be the default
+  pinMode(Vmod2, INPUT); //inout makes it 5v, this should be the default
+  //Vmod1 Vmod2 Output
+  //  I     I    5v
+  //  L     I    6v
+  //  I     L    8v
+  //  L     L    9v
   pinMode(MotorA1, OUTPUT);
   pinMode(MotorA2, OUTPUT);
   pinMode(MotorB1, OUTPUT);
@@ -568,6 +683,12 @@ void setup()
                 int speed = value.toInt();
                 Serial.print("Set M1: ");
                 Serial.println(speed);
+                speed = (speed*maxmotor1)/100;
+                // Serial.println(speed);
+                if (swapdirectionmotor1) {
+                  speed =speed *-1;
+                }
+                // Serial.println(speed);
                 if (abs(speed) < 5)
                 {
                   speed = 0;
@@ -575,18 +696,32 @@ void setup()
                 // get direction
                 if (speed >= 0)
                 {
-                  digitalWrite(MotorA2, LOW);
-                  ledcWrite(MotorA1, speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorB2, LOW);
+                    ledcWrite(MotorB1, speed);
+                  } else {
+                    digitalWrite(MotorA2, LOW);
+                    ledcWrite(MotorA1, speed);
+                  }
                 }
                 else
                 {
-                  digitalWrite(MotorA2, HIGH);
-                  ledcWrite(MotorA1, 255 + speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorB2, HIGH);
+                    ledcWrite(MotorB1, 255 + speed);
+                  } else {
+                    digitalWrite(MotorA2, HIGH);
+                    ledcWrite(MotorA1, 255 + speed);
+                  }
                 }
               }
               if (request->hasParam("M2")) {
                 String value = request->arg("M2");
                 int speed = value.toInt();
+                speed = (speed*maxmotor2)/100;
+                if (swapdirectionmotor2) {
+                  speed =speed *-1;
+                }
                 Serial.print("Set M2: ");
                 Serial.println(speed);
                 if (abs(speed) < 5)
@@ -596,13 +731,23 @@ void setup()
                 // get direction
                 if (speed >= 0)
                 {
-                  digitalWrite(MotorB2, LOW);
-                  ledcWrite(MotorB1, speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorA2, LOW);
+                    ledcWrite(MotorA1, speed);
+                  } else {
+                    digitalWrite(MotorB2, LOW);
+                    ledcWrite(MotorB1, speed);
+                  }
                 }
                 else
                 {
-                  digitalWrite(MotorB2, HIGH);
-                  ledcWrite(MotorB1, 255 + speed);
+                  if (swapmotors) {
+                    digitalWrite(MotorA2, HIGH);
+                    ledcWrite(MotorA1, 255 + speed);
+                  } else {
+                    digitalWrite(MotorB2, HIGH);
+                    ledcWrite(MotorB1, 255 + speed);
+                  }
                 }
               }
     

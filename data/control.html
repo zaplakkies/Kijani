@@ -172,10 +172,6 @@
 
         <div class="card">
 
-            <button class="boostBtn" onclick="boost()">
-                ⚡ BOOST
-            </button>
-
             <button class="stopBtn" onclick="stopAll()">
                 🛑 STOP
             </button>
@@ -215,15 +211,6 @@ function stopAll() {
 
     knob.style.left = '105px';
     knob.style.top = '105px';
-}
-
-function boost() {
-
-    sendControl(255,255);
-
-    setTimeout(() => {
-        sendControl(0,0);
-    }, 500);
 }
 
 function handleMove(clientX, clientY) {

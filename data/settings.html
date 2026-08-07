@@ -170,6 +170,8 @@
     </tr>
   </table>
 
+  <p>Boost level: 1 = 5v, 2 = 6v, 3 = 8v, 4 = 9v. Only works on v3 boards</p>
+  <p>WARNING: Higher than 5v can damage servos and motors, make sure you know what you are doing!!!!</p>
 
   <script>
     async function loadSetting(key) { 
@@ -197,6 +199,36 @@
         key: "startupTune",
         label: "Startup Tune",
         maxlength: 200
+      },
+      {
+        key: "MaxMotor1",
+        label: "Max Motor1 value %",
+        maxlength: 20
+      },
+      {
+        key: "MaxMotor2",
+        label: "Max Motor2 value %",
+        maxlength: 20
+      },
+      {
+        key: "SwapMotors",
+        label: "Swap motors around",
+        maxlength: 20
+      },
+      {
+        key: "SwapDMotor1",
+        label: "Swap Motor 1 direction",
+        maxlength: 20
+      },
+      {
+        key: "SwapDMotor2",
+        label: "Swap Motor 2 direction",
+        maxlength: 20
+      },
+      {
+        key: "BoostLevel",
+        label: "Boostlevel 1-4",
+        maxlength: 20
       }
     ];
     function createSettingsTable() {

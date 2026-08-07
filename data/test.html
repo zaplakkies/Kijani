@@ -172,13 +172,7 @@
 
 </div>
 
-<div style="margin-top:20px;">
-    <button class="boost" onclick="boost()">⚡ BOOST</button>
-</div>
-
 <script>
-
-let boostMode = false;
 
 function send(params) {
     fetch('/processcontrol?' + params)
@@ -195,17 +189,6 @@ function setServo(id, val) {
 
 function stopAll() {
     send('M1=0&M2=0');
-}
-
-function boost() {
-
-    boostMode = !boostMode;
-
-    if (boostMode) {
-        send('M1=255&M2=255');
-    } else {
-        send('M1=0&M2=0');
-    }
 }
 
 </script>

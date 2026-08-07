@@ -1,0 +1,564 @@
+/* ------------------------------------------------------------------
+   Kijani component library styles.
+   All colours come from the --kj-* tokens in src/css/custom.css —
+   edit the tokens there to restyle the whole site.
+------------------------------------------------------------------- */
+
+/* ============================ Hero ============================== */
+
+.hero {
+  background:
+    radial-gradient(90rem 40rem at 80% -20%, var(--kj-mask-halo), transparent 60%),
+    linear-gradient(170deg, var(--kj-mask) 0%, var(--kj-mask-deep) 55%, var(--kj-mask-dark) 100%);
+  color: var(--kj-silk);
+  padding: 4.5rem 0 0;
+  overflow: hidden;
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 3rem;
+  align-items: center;
+  padding-bottom: 4rem;
+}
+
+.heroEyebrow {
+  font-family: var(--kj-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--kj-gold);
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-family: var(--kj-font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.heroLead {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  max-width: 34rem;
+  color: var(--kj-mist);
+}
+
+.heroLead strong {
+  color: var(--kj-gold);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.75rem 0 1rem;
+}
+
+.heroFinePrint {
+  font-family: var(--kj-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--kj-sage);
+  margin: 0;
+}
+
+.heroArt {
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------------------------- Buttons --------------------------- */
+
+.btn {
+  font-family: var(--kj-font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.4rem;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: transform 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.btnPrimary {
+  background: var(--kj-copper);
+  color: var(--kj-btn-ink);
+}
+
+.btnPrimary:hover {
+  background: var(--kj-gold);
+  color: var(--kj-btn-ink);
+}
+
+.btnGhost {
+  border-color: currentColor;
+  color: inherit;
+}
+
+.btnGhost:hover {
+  color: var(--kj-gold);
+}
+
+.btnGhostLight {
+  border-color: var(--kj-gold);
+  color: var(--kj-gold);
+}
+
+.btnGhostLight:hover {
+  background: var(--kj-gold);
+  color: var(--kj-btn-ink);
+}
+
+/* -------------------------- Board art --------------------------- */
+
+.board {
+  width: 100%;
+  max-width: 420px;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.45));
+}
+
+.boardBase {
+  fill: var(--kj-board);
+  stroke: var(--kj-mask-dark);
+  stroke-width: 2;
+}
+
+.boardSheen {
+  fill: none;
+  stroke: var(--kj-board-line);
+  stroke-width: 1;
+}
+
+.holeRing {
+  fill: var(--kj-gold);
+}
+
+.holeCore {
+  fill: var(--kj-mask-dark);
+}
+
+.traces path {
+  fill: none;
+  stroke: var(--kj-copper);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+  animation: kj-trace-draw 1.4s ease-out forwards;
+}
+
+.traces path:nth-child(2) { animation-delay: 0.08s; }
+.traces path:nth-child(3) { animation-delay: 0.16s; }
+.traces path:nth-child(4) { animation-delay: 0.24s; }
+.traces path:nth-child(5) { animation-delay: 0.32s; }
+.traces path:nth-child(6) { animation-delay: 0.4s; }
+.traces path:nth-child(7) { animation-delay: 0.48s; }
+.traces path:nth-child(8) { animation-delay: 0.56s; }
+.traces path:nth-child(9) { animation-delay: 0.64s; }
+
+@keyframes kj-trace-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.pads circle {
+  fill: var(--kj-gold);
+  stroke: var(--kj-mask-dark);
+  stroke-width: 1.5;
+}
+
+.chip,
+.chipSmall {
+  fill: var(--kj-ink);
+  stroke: var(--kj-chip-line);
+  stroke-width: 1.5;
+}
+
+.chipShield {
+  fill: var(--kj-chip-shield);
+}
+
+.chipLabel {
+  font-family: var(--kj-font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  fill: var(--kj-silk);
+}
+
+.chipPin,
+.chipPinSmall {
+  font-family: var(--kj-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  fill: var(--kj-sage);
+}
+
+.chipPinSmall {
+  font-size: 14px;
+  fill: var(--kj-gold);
+}
+
+.header {
+  fill: var(--kj-silk);
+  stroke: var(--kj-copper);
+  stroke-width: 1.5;
+}
+
+.headerLabel {
+  font-family: var(--kj-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--kj-ink);
+}
+
+.silk {
+  font-family: var(--kj-font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  fill: var(--kj-silk);
+  opacity: 0.9;
+}
+
+.silkSmall {
+  font-family: var(--kj-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  fill: var(--kj-sage);
+}
+
+/* -------------------------- Spec strip -------------------------- */
+
+.specStrip {
+  border-top: 1px solid #1a7a5266;
+  background: var(--kj-mask-dark);
+}
+
+.specStripInner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.5rem;
+  justify-content: space-between;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+  font-family: var(--kj-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--kj-sage);
+}
+
+.specStripInner strong {
+  color: var(--kj-gold);
+  font-weight: 600;
+}
+
+/* ========================== Sections ============================ */
+
+.section {
+  padding: 4.5rem 0;
+  background: var(--kj-paper);
+  color: var(--kj-ink);
+}
+
+.sectionDark {
+  background: var(--kj-ink);
+  color: var(--kj-frost);
+}
+
+.sectionDark p {
+  color: var(--kj-mist-dim);
+}
+
+.sectionTitle {
+  font-family: var(--kj-font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  max-width: 40rem;
+  margin-bottom: 1.5rem;
+}
+
+/* silkscreen-style reference designator eyebrow */
+.refdes {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--kj-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+  color: inherit;
+  opacity: 0.75;
+}
+
+.refdesId {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  padding: 0.15rem 0.4rem;
+  border: 1.5px solid var(--kj-copper);
+  border-radius: 3px;
+  color: var(--kj-copper-ink);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.sectionDark .refdesId,
+.onDark .refdesId {
+  color: var(--kj-gold);
+  border-color: var(--kj-gold);
+}
+
+/* ------------------------ Generic split ------------------------- */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: center;
+}
+
+/* ------------------------- Feature grid ------------------------- */
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+}
+
+.featureCard {
+  background: var(--kj-card);
+  border: 1px solid var(--kj-line);
+  border-radius: 10px;
+  padding: 1.4rem 1.4rem 1.2rem;
+  position: relative;
+}
+
+.featureCard::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: 10px 0 0 10px;
+  background: linear-gradient(var(--kj-copper), var(--kj-gold));
+}
+
+.featureRef {
+  font-family: var(--kj-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--kj-copper-ink);
+}
+
+.featureCard h3 {
+  font-family: var(--kj-font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0.5rem 0 0.5rem;
+}
+
+.featureCard p {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--kj-ink-soft);
+}
+
+/* --------------------------- Terminal --------------------------- */
+
+.terminal {
+  background: var(--kj-terminal);
+  border: 1px solid var(--kj-chip-line);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.terminalBar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--kj-ink);
+  border-bottom: 1px solid var(--kj-chip-line);
+}
+
+.terminalBar span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--kj-chip-line);
+}
+
+.terminalBar em {
+  margin-left: auto;
+  font-style: normal;
+  font-family: var(--kj-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--kj-sage);
+}
+
+.terminalBody {
+  margin: 0;
+  padding: 1.2rem 1.3rem;
+  background: transparent;
+  font-family: var(--kj-font-mono);
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--kj-frost);
+}
+
+.tGet {
+  color: var(--kj-gold);
+  font-weight: 600;
+}
+
+.tCmt {
+  color: var(--kj-sage-dim);
+}
+
+/* ------------------------- Config list -------------------------- */
+
+.configList {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.configList li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  border: 1.5px solid var(--kj-ink);
+  border-radius: 8px;
+  padding: 0.8rem 1.1rem;
+  background: var(--kj-card);
+}
+
+.configList strong {
+  font-family: var(--kj-font-display);
+  font-size: 0.98rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.configList span {
+  font-family: var(--kj-font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--kj-ink-mute);
+}
+
+.configNote {
+  max-width: 38rem;
+  line-height: 1.65;
+  color: var(--kj-ink-soft);
+  margin: 0;
+}
+
+/* ----------------------------- CTA ------------------------------ */
+
+.ctaSection {
+  background: linear-gradient(170deg, var(--kj-mask) 0%, var(--kj-mask-dark) 100%);
+  color: var(--kj-silk);
+}
+
+.ctaInner {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ctaInner p {
+  line-height: 1.7;
+  color: var(--kj-mist);
+  margin: 0;
+}
+
+.ctaActions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.ctaActions .btn {
+  text-align: center;
+}
+
+/* ------------------------- Responsiveness ----------------------- */
+
+@media (max-width: 996px) {
+  .heroInner,
+  .split,
+  .ctaInner {
+    grid-template-columns: 1fr;
+  }
+
+  .heroArt {
+    order: -1;
+  }
+
+  .board {
+    max-width: 340px;
+  }
+
+  .featureGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 3rem;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .specStripInner {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+}
+
+/* ------------------------ Reduced motion ------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .traces path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .btn,
+  .btn:hover {
+    transition: none;
+    transform: none;
+  }
+}
