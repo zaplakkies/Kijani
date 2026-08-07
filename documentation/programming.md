@@ -175,7 +175,7 @@ Files are served automatically:
 
 
 http://10.10.10.10/index.html
-http://10.10.10.10/controlpad.html
+http://10.10.10.10/control.html
 ...
 
 Default file:

@@ -114,7 +114,7 @@ Response Example
     },
     {
       "id":1,
-      "name":"controlpad.html",
+      "name":"control.html",
       "size":4096
     }
   ]
@@ -187,7 +187,7 @@ The ESP32 serves all files stored in LittleFS.
 Example:
 
 /index.html
-/controlpad.html
+/control.html
 /loading.gif
 /style.css
 Recommended Frontend Design

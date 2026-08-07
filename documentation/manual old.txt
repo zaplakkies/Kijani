@@ -290,7 +290,7 @@ File System
 The ESP32 hosts files directly from LittleFS.
 Examples:
 /index.html
-/controlpad.html
+/control.html
 /style.css
 This allows the robot itself to host its own web control pages.
 
