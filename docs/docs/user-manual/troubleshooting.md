@@ -8,7 +8,7 @@ sidebar_position: 6
 
 <FeatureGrid>
   <FeatureCard refdes="WiFi" title="Can't see the WiFi network">
-    Check that the battery is connected and the switch is ON. Listen for the startup tune. If there's no tune, the battery may be flat — charge it over USB and try again.
+    Check that the battery is connected and the switch is ON. Listen for the startup tune. If there's no tune, the battery may be flat — charge it over USB and try again. When the board is in AP mode ready for you to connect it will be flashing slow and gives 3 beeps every 10 seconds.
   </FeatureCard>
   <FeatureCard refdes="M1" title="Robot drives backwards">
     Swap the two wires on the affected motor, or invert the direction in the settings page.

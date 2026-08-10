@@ -31,4 +31,4 @@ Open the **Settings** page from the home screen to configure:
 
 ![Settings page](./img/settings2.jpeg)
 
-For firmware updates and factory reset, see [Maintenance](./maintenance.md).
+For firmware updates and system recovery, see [Maintenance](./maintenance.md).
