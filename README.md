@@ -338,7 +338,7 @@ Inspired by:
 # 🔗 Links
 
 ## PCB Files
-[PLACEHOLDER_EASYEDA_LINK]
+https://oshwlab.com/ithegi/project_apcllstg
 
 ## Rover moot
 https://www.scouts.org.za/2africascoutmoot/

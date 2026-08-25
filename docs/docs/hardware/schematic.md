@@ -3,20 +3,16 @@ id: schematic
 title: Schematic
 ---
 
-## Schematic Preview
+## Schematic Preview (V3 Production)
 
 <iframe
-  src="/Kijani/hardware/v1/Schematic_mootbotv1_2026-05-23.pdf"
+  src="/Kijani/hardware/v3/Schematic_mootbotv3_2026-07-31.pdf"
   width="100%"
   height="700px"
 />
 
-## Open in new tab
+## Download Schematic PDFs
 
-<a
-  href="/Kijani/hardware/v1/Schematic_mootbotv1_2026-05-23.pdf"
-  target="_blank"
-  rel="noopener noreferrer"
->
-Click here to open schematic PDF
-</a>
+* **[V3 (Current Production): Click here to open Schematic PDF](/Kijani/hardware/v3/Schematic_mootbotv3_2026-07-31.pdf)** (Released July 2026)
+* **[V2 (Legacy): Click here to open Schematic PDF](/Kijani/hardware/v2/Schematic_mootbotv2_2026-05-23.pdf)** (Released May 2026)
+
