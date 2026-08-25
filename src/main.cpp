@@ -606,7 +606,7 @@ void setup()
   pinMode(MotorA2, OUTPUT);
   pinMode(MotorB1, OUTPUT);
   pinMode(MotorB2, OUTPUT);
-  pinMode(pgm, INPUT);
+  pinMode(pgm, INPUT_PULLUP);
   pinMode(statled, OUTPUT);
   digitalWrite(statled, LOW);
   // // // ---- Read Internal Temperature ----
