@@ -1,108 +1,404 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>RTTTL Player</title>
-
+    <meta charset="UTF-8">
+    <title>RTTTL Player - Mootbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            font-family: monospace;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin-top: 10px;
-        }
-
-        .examples button {
-            margin: 5px;
-        }
-
-        #result {
-            margin-top: 15px;
-            font-weight: bold;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f7f9fc; margin: 0; padding: 0; color: #333; }
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+        .page-title { color: #223266; margin: 10px 0 20px 0; font-size: 1.6rem; display: flex; align-items: center; gap: 8px; }
+        .rtttl-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .rtttl-layout { grid-template-columns: 3fr 2fr; } }
+        .card-custom { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eef0f5; margin-bottom: 20px; }
+        .card-title { font-size: 1.15rem; color: #223266; margin: 0 0 15px 0; padding-bottom: 6px; border-bottom: 2px solid #618cc8; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .styled-textarea { width: 100%; height: 80px; font-family: monospace; font-size: 14px; font-weight: bold; padding: 10px; border: 2px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; background: #fafafa; resize: vertical; }
+        .styled-textarea:focus { outline: none; border-color: #f47920; background: #fff; }
+        .button-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        .btn { display: inline-flex; align-items: center; gap: 6px; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: #f47920; color: white; }
+        .btn-primary:hover { background: #db6512; }
+        .btn-secondary { background: #618cc8; color: white; }
+        .btn-secondary:hover { background: #4b78b5; }
+        .btn-danger { background: #e53e3e; color: white; }
+        .btn-danger:hover { background: #c53030; }
+        .parser-panel { background: #f8fafc; border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; }
+        .parser-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .status-badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; }
+        .status-valid { background: #d1fae5; color: #065f46; }
+        .status-invalid { background: #fee2e2; color: #991b1b; }
+        .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .meta-item { background: white; padding: 6px; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; }
+        .meta-label { font-size: 0.65rem; color: #718096; text-transform: uppercase; font-weight: bold; }
+        .meta-value { font-size: 0.85rem; font-weight: bold; color: #2d3748; }
+        .notes-visualizer { display: flex; gap: 5px; overflow-x: auto; padding: 8px; border-radius: 6px; background: white; border: 1px solid #e2e8f0; }
+        .note-badge { flex: 0 0 auto; background: #edf2f7; color: #4a5568; font-family: monospace; padding: 3px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; border: 1px solid #cbd5e0; cursor: pointer; }
+        .note-badge.active-note { background: #f47920; color: white; border-color: #db6512; transform: scale(1.05); }
+        .category-title { font-size: 0.85rem; color: #4a5568; font-weight: bold; margin: 10px 0 6px 0; text-transform: uppercase; border-left: 3px solid #f47920; padding-left: 6px; }
+        .example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .btn-example { background: #f7fafc; border: 1px solid #cbd5e0; padding: 8px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 0.8rem; color: #2d3748; font-weight: 600; display: flex; justify-content: space-between; }
+        .btn-example:hover { background: #edf2f7; border-color: #618cc8; }
+        .builder-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 8px; }
+        .builder-key { background: white; border: 1.5px solid #cbd5e0; border-radius: 4px; padding: 8px 2px; font-weight: bold; font-size: 0.85rem; cursor: pointer; text-align: center; }
+        .builder-key:hover { background: #edf2f7; border-color: #f47920; }
+        .builder-key.sharp { background: #2d3748; color: white; border-color: #2d3748; }
+        .builder-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .builder-col { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .builder-label { font-size: 0.7rem; font-weight: bold; color: #718096; }
+        .builder-select { padding: 6px; border-radius: 4px; border: 1px solid #cbd5e0; background: white; font-size: 0.8rem; font-weight: bold; }
+        .status-message { margin-top: 10px; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; display: none; }
+        .status-message.info { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; display: block; }
+        .status-message.success { background: #f0fff4; color: #38a169; border: 1px solid #c6f6d5; display: block; }
+        .status-message.error { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; display: block; }
+        .wave-indicator { display: inline-flex; gap: 2px; height: 12px; align-items: flex-end; visibility: hidden; }
+        .wave-indicator.active { visibility: visible; }
+        .wave-bar { width: 2px; height: 100%; background: #f47920; animation: wave-bounce 0.6s ease-in-out infinite alternate; }
+        .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes wave-bounce { 0% { height: 3px; } 100% { height: 12px; } }
     </style>
 </head>
-
 <body>
-
-    <h1>RTTTL Tune Player</h1>
-
-    <p>
-        Enter an RTTTL tune and press Play.
-    </p>
-
-    <textarea id="tune">
-Beethoven:d=4,o=5,b=160:c,e,c,g,c,c6,8b,8a,8g,8a,8g,8f,8e,8f,8e,8d,c,e,g,e,c6,g
-    </textarea>
-
-    <br>
-
-    <button onclick="playTune()">Play Tune</button>
-
-    <div class="examples">
-        <h3>Examples</h3>
-
-        <button onclick="loadExample('Jingle:d=4,o=5,b=100:8b,16d6,16c6,8e6')">
-            Startup
-        </button>
-
-        <button onclick="loadExample('Scale:d=4,o=5,b=120:c,d,e,f,g,a,b,c6')">
-            Scale
-        </button>
-
-        <button onclick="loadExample('Beep:d=4,o=5,b=120:c,p,c,p,c')">
-            Beep
-        </button>
+    <div class="header">
+        <a href="index.html" class="logo"><img src="logo.png" alt="Mootbot">Mootbot control interface</a>
+        <div id="ver"></div>
+        <div class="header-right">
+            <a href="index.html">Home</a>
+            <a href="settings.html">Settings</a>
+            <a href="test.html">test interface</a>
+            <a class="active" href="rtttl.html">RTTTL Player</a>
+        </div>
+        <div class="card">
+            <div class="icon" id="batteryIcon">🔋</div>
+            <div class="value" id="batteryValue">-- V</div>
+            <div class="gauge"><div class="fill" id="batteryBar"></div></div>
+            <div class="small" id="batteryState">--</div>
+        </div>
+        <div class="card">
+            <div class="icon">🌡️</div>
+            <div class="value" id="tempValue">-- °C</div>
+            <div class="small">Internal Temp</div>
+        </div>
     </div>
 
-    <div id="result"></div>
+    <div class="main-container">
+        <h2 class="page-title">🎵 RTTTL Melody Composer</h2>
+        <div class="rtttl-layout">
+            <div>
+                <div class="card-custom">
+                    <div class="card-title">
+                        <span>📝 Compose Melody</span>
+                        <div class="wave-indicator" id="wave-ind"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+                    </div>
+                    <textarea id="tune" class="styled-textarea" spellcheck="false" oninput="parseEditorInput()">Beethoven:d=4,o=5,b=160:c,e,c,g,c,c6,8b,8a,8g,8a,8g,8f,8e,8f,8e,8d,c,e,g,e,c6,g</textarea>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="sendToBot()">🤖 Play on Bot</button>
+                        <button class="btn btn-danger" onclick="stopBot()">Stop Bot</button>
+                        <button id="btn-preview" class="btn btn-secondary" onclick="togglePreview()">🔊 Preview</button>
+                    </div>
+                    <div id="result" class="status-message"></div>
+                </div>
 
+                <div class="card-custom">
+                    <div class="card-title">🔍 Live Diagnostics</div>
+                    <div class="parser-panel">
+                        <div class="parser-header">
+                            <span style="font-size:0.85rem; font-weight:bold; color:#4a5568;">Parser Output</span>
+                            <span id="badge" class="status-badge status-valid">Valid</span>
+                        </div>
+                        <div class="meta-grid">
+                            <div class="meta-item"><div class="meta-label">Name</div><div id="m-name" class="meta-value">--</div></div>
+                            <div class="meta-item"><div class="meta-label">Tempo</div><div id="m-bpm" class="meta-value">--</div></div>
+                            <div class="meta-item"><div class="meta-label">Notes</div><div id="m-count" class="meta-value">--</div></div>
+                        </div>
+                        <div id="notes-view" class="notes-visualizer"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card-custom">
+                    <div class="card-title">📚 Library</div>
+                    <div class="category-title">🎮 Games</div>
+                    <div class="example-grid">
+                        <button class="btn-example" onclick="loadTune('Mario:d=4,o=5,b=125:8a,8a,p,8a,p,8f,8a,p,8c6,p,p,p,8g')">Mario</button>
+                        <button class="btn-example" onclick="loadTune('StarWars:d=4,o=5,b=100:8g,8g,8g,8e.,16b.,8g,8e.,16b.,2g')">Star Wars</button>
+                    </div>
+                    <div class="category-title">🎻 Classical</div>
+                    <div class="example-grid">
+                        <button class="btn-example" onclick="loadTune('Beethoven:d=4,o=5,b=160:c,e,c,g,c,c6,8b,8a,8g,8a,8g,8f,8e,8f,8e,8d,c,e,g,e,c6,g')">Beethoven</button>
+                        <button class="btn-example" onclick="loadTune('Nokia:d=4,o=5,b=180:8e6,8d6,f#,g#,8b,8a,c#,e,8b,8a,c#,e,2a')">Nokia</button>
+                    </div>
+                    <div class="category-title">🛠️ System</div>
+                    <div class="example-grid">
+                        <button class="btn-example" onclick="loadTune('Startup:d=4,o=5,b=100:8b,16d6,16c6,8e6')">Startup</button>
+                        <button class="btn-example" onclick="loadTune('Beep:d=4,o=5,b=120:c,p,c,p,c')">Beeps</button>
+                    </div>
+                </div>
+
+                <div class="card-custom">
+                    <div class="card-title">🎹 Note Keypad</div>
+                    <div class="builder-row">
+                        <div class="builder-col">
+                            <span class="builder-label">Duration</span>
+                            <select id="b-dur" class="builder-select">
+                                <option value="1">1 (Whole)</option><option value="2">2</option><option value="4" selected>4 (Quarter)</option><option value="8">8</option><option value="16">16</option>
+                            </select>
+                        </div>
+                        <div class="builder-col">
+                            <span class="builder-label">Octave</span>
+                            <select id="b-oct" class="builder-select">
+                                <option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option>
+                            </select>
+                        </div>
+                        <div class="builder-col" style="flex:0;">
+                            <span class="builder-label">Dot</span>
+                            <input type="checkbox" id="b-dot" style="margin-top:6px; cursor:pointer;">
+                        </div>
+                    </div>
+                    <div class="builder-grid">
+                        <button class="builder-key" onclick="pressKey('c')">C</button>
+                        <button class="builder-key sharp" onclick="pressKey('c#')">C#</button>
+                        <button class="builder-key" onclick="pressKey('d')">D</button>
+                        <button class="builder-key sharp" onclick="pressKey('d#')">D#</button>
+                        <button class="builder-key" onclick="pressKey('e')">E</button>
+                        <button class="builder-key" onclick="pressKey('f')">F</button>
+                        <button class="builder-key sharp" onclick="pressKey('f#')">F#</button>
+                    </div>
+                    <div class="builder-grid" style="grid-template-columns: repeat(6, 1fr);">
+                        <button class="builder-key" onclick="pressKey('g')">G</button>
+                        <button class="builder-key sharp" onclick="pressKey('g#')">G#</button>
+                        <button class="builder-key" onclick="pressKey('a')">A</button>
+                        <button class="builder-key sharp" onclick="pressKey('a#')">A#</button>
+                        <button class="builder-key" onclick="pressKey('b')">B</button>
+                        <button class="builder-key" style="background:#e2e8f0;" onclick="pressKey('p')">Rest</button>
+                    </div>
+                    <button class="btn btn-secondary" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem;" onclick="clearNotes()">Clear All Notes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
+        const FREQS = {'c':261.6,'c#':277.2,'d':293.7,'d#':311.1,'e':329.6,'f':349.2,'f#':370.0,'g':392.0,'g#':415.3,'a':440.0,'a#':466.2,'b':493.9};
+        let audioCtx = null, activeTimeouts = [], isPlaying = false, parsedTune = null;
 
-        function loadExample(tune)
-        {
-            document.getElementById("tune").value = tune;
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/getver').then(r => r.text()).then(html => document.getElementById('ver').innerHTML = html).catch(()=>{});
+            updateStatus();
+            setInterval(updateStatus, 3000);
+            parseEditorInput();
+        });
+
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+        async function updateStatus() {
+            try {
+                const res = await fetch('/quickstatus');
+                const data = await res.json();
+                let v = data.vIn;
+                document.getElementById("batteryValue").innerText = v.toFixed(2) + " V";
+                let pct = clamp(((v - 3.5) / (4.2 - 3.5)) * 100, 0, 100);
+                const bar = document.getElementById("batteryBar");
+                bar.style.width = pct + "%";
+                bar.style.background = pct < 25 ? "red" : pct < 60 ? "orange" : "green";
+                
+                const icon = document.getElementById("batteryIcon");
+                const state = document.getElementById("batteryState");
+                if (v > 4.5) {
+                    icon.innerText = "⚡🔋"; state.innerText = "Charging"; state.className = "charging";
+                } else {
+                    icon.innerText = "🔋"; state.innerText = "On battery"; state.className = "normal";
+                }
+                document.getElementById("tempValue").innerText = data.temperature.toFixed(1) + " °C";
+            } catch(e) {}
         }
 
-        async function playTune()
-        {
+        function parseRTTTL(str) {
+            const parts = str.trim().split(':');
+            if (parts.length < 3) throw new Error("Format error: missing parts");
+            const name = parts[0].trim() || "Tune";
+            let d=4, o=5, b=120;
+            parts[1].split(',').forEach(p => {
+                const kv = p.trim().split('=');
+                if (kv.length === 2) {
+                    const k = kv[0].trim().toLowerCase(), v = parseInt(kv[1]);
+                    if (!isNaN(v)) { if(k==='d')d=v; else if(k==='o')o=v; else if(k==='b')b=v; }
+                }
+            });
+            const notes = [];
+            const re = /^(\d*)([cdefgabp]#?)(\d*)(\.?)$/i;
+            parts[2].split(',').forEach(rn => {
+                const n = rn.trim();
+                if (!n) return;
+                const m = n.match(re);
+                if (!m) throw new Error("Invalid note: " + n);
+                notes.push({
+                    raw: n,
+                    dur: m[1] ? parseInt(m[1]) : d,
+                    note: m[2].toLowerCase(),
+                    oct: m[3] ? parseInt(m[3]) : o,
+                    dot: m[4] === '.'
+                });
+            });
+            return { name, tempo: b, notes };
+        }
+        function parseEditorInput() {
+            const txt = document.getElementById("tune").value;
+            const badge = document.getElementById("badge");
+            const view = document.getElementById("notes-view");
+            try {
+                parsedTune = parseRTTTL(txt);
+                badge.innerText = "Valid"; badge.className = "status-badge status-valid";
+                document.getElementById("m-name").innerText = parsedTune.name;
+                document.getElementById("m-bpm").innerText = parsedTune.tempo;
+                document.getElementById("m-count").innerText = parsedTune.notes.length;
+                view.innerHTML = "";
+                parsedTune.notes.forEach((n, i) => {
+                    const span = document.createElement("span");
+                    span.className = "note-badge";
+                    span.id = `nb-${i}`;
+                    span.innerText = n.raw;
+                    span.onclick = () => {
+                        if (n.note !== 'p') {
+                            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                            const osc = ctx.createOscillator(), g = ctx.createGain();
+                            osc.type = 'square';
+                            osc.frequency.setValueAtTime(FREQS[n.note] * Math.pow(2, n.oct - 4), ctx.currentTime);
+                            g.gain.setValueAtTime(0, ctx.currentTime);
+                            g.gain.linearRampToValueAtTime(0.1, ctx.currentTime+0.01);
+                            g.gain.linearRampToValueAtTime(0, ctx.currentTime+0.25);
+                            osc.connect(g); g.connect(ctx.destination);
+                            osc.start(); osc.stop(ctx.currentTime+0.26);
+                            setTimeout(() => ctx.close(), 300);
+                        }
+                    };
+                    view.appendChild(span);
+                });
+            } catch(err) {
+                parsedTune = null;
+                badge.innerText = "Error"; badge.className = "status-badge status-invalid";
+                document.getElementById("m-name").innerText = "Error";
+                document.getElementById("m-bpm").innerText = "--";
+                document.getElementById("m-count").innerText = "--";
+                view.innerHTML = `<span style="color:#e53e3e;font-size:0.8rem;font-weight:bold;">${err.message}</span>`;
+            }
+        }
+
+        function stopPreview() {
+            activeTimeouts.forEach(t => clearTimeout(t)); activeTimeouts = [];
+            if (audioCtx) { try { audioCtx.close(); } catch(e){} audioCtx = null; }
+            isPlaying = false;
+            document.getElementById("btn-preview").innerText = "🔊 Preview";
+            document.getElementById("btn-preview").className = "btn btn-secondary";
+            document.getElementById("wave-ind").classList.remove("active");
+            document.querySelectorAll(".note-badge").forEach(b => b.classList.remove("active-note"));
+        }
+
+        function togglePreview() {
+            if (isPlaying) { stopPreview(); return; }
+            if (!parsedTune) { showMsg("Fix parsing errors first.", "error"); return; }
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return; }
+            isPlaying = true;
+            document.getElementById("btn-preview").innerText = "⏹️ Stop";
+            document.getElementById("btn-preview").className = "btn btn-danger";
+            document.getElementById("wave-ind").classList.add("active");
+            
+            const wholeNote = 240 / parsedTune.tempo;
+            let curTime = audioCtx.currentTime + 0.05;
+
+            parsedTune.notes.forEach((n, idx) => {
+                let dur = wholeNote / n.dur;
+                if (n.dot) dur *= 1.5;
+                const playDur = dur * 0.9;
+                const badge = document.getElementById(`nb-${idx}`);
+
+                if (n.note !== 'p') {
+                    const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(FREQS[n.note] * Math.pow(2, n.oct - 4), curTime);
+                    g.gain.setValueAtTime(0, curTime);
+                    g.gain.linearRampToValueAtTime(0.12, curTime+0.005);
+                    g.gain.setValueAtTime(0.12, curTime+playDur-0.01);
+                    g.gain.linearRampToValueAtTime(0, curTime+playDur);
+                    osc.connect(g); g.connect(audioCtx.destination);
+                    osc.start(curTime); osc.stop(curTime+playDur);
+                }
+
+                const delay = (curTime - audioCtx.currentTime) * 1000;
+                activeTimeouts.push(setTimeout(() => {
+                    document.querySelectorAll(".note-badge").forEach(b => b.classList.remove("active-note"));
+                    if (badge) {
+                        badge.classList.add("active-note");
+                        badge.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+                    }
+                }, delay));
+
+                curTime += dur;
+            });
+
+            activeTimeouts.push(setTimeout(stopPreview, (curTime - audioCtx.currentTime) * 1000));
+        }
+        async function sendToBot() {
+            stopPreview();
             const tune = document.getElementById("tune").value;
-
-            document.getElementById("result").innerText =
-                "Sending tune...";
-
-            try
-            {
-                const response =
-                    await fetch(
-                        "/playrtttl?tune=" +
-                        encodeURIComponent(tune));
-
-                const text = await response.text();
-
-                document.getElementById("result").innerText =
-                    text;
-            }
-            catch (err)
-            {
-                document.getElementById("result").innerText =
-                    "Failed: " + err;
-            }
+            showMsg("Sending to bot...", "info");
+            try {
+                const res = await fetch("/playrtttl?tune=" + encodeURIComponent(tune));
+                showMsg(`Mootbot: ${await res.text()}`, "success");
+            } catch(e) { showMsg("Failed: " + e, "error"); }
         }
 
+        async function stopBot() {
+            stopPreview();
+            showMsg("Silencing bot...", "info");
+            try {
+                await fetch("/playrtttl?tune=" + encodeURIComponent("Stop:d=4,o=5,b=120:p"));
+                showMsg("Silenced bot", "success");
+            } catch(e) { showMsg("Failed: " + e, "error"); }
+        }
+
+        function loadTune(rtttl) {
+            stopPreview();
+            document.getElementById("tune").value = rtttl;
+            parseEditorInput();
+            showMsg("Loaded from library", "success");
+        }
+
+        function pressKey(note) {
+            const dur = document.getElementById("b-dur").value;
+            const oct = document.getElementById("b-oct").value;
+            const dot = document.getElementById("b-dot").checked ? "." : "";
+            const segment = `${dur}${note}${oct}${dot}`;
+            const input = document.getElementById("tune");
+            const val = input.value.trim();
+            const parts = val.split(':');
+            if (parts.length < 3) {
+                input.value = `MyTune:d=4,o=5,b=120:${segment}`;
+            } else {
+                let notes = parts[2].trim();
+                notes = notes ? `${notes},${segment}` : segment;
+                input.value = `${parts[0].trim()}:${parts[1].trim()}:${notes}`;
+            }
+            parseEditorInput();
+            const view = document.getElementById("notes-view");
+            setTimeout(() => view.scrollLeft = view.scrollWidth, 50);
+        }
+
+        function clearNotes() {
+            const input = document.getElementById("tune");
+            const parts = input.value.trim().split(':');
+            input.value = parts.length >= 2 ? `${parts[0].trim()}:${parts[1].trim()}:` : "MyTune:d=4,o=5,b=120:";
+            parseEditorInput();
+            showMsg("Notes cleared", "info");
+        }
+
+        function showMsg(m, t) {
+            const r = document.getElementById("result");
+            r.innerText = m; r.className = `status-message ${t}`;
+            clearTimeout(r.timer);
+            if (t !== "error") r.timer = setTimeout(() => r.style.display="none", 5000);
+        }
     </script>
-
 </body>
-
 </html>
