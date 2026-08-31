@@ -59,7 +59,7 @@ const config = {
 	],
 
 	plugins: [
-		...['software', 'hardware', 'user-manual'].map((id) => [
+		...['software', 'hardware', 'user-manual', 'course'].map((id) => [
 			'@docusaurus/plugin-content-docs',
 			{
 				id,
@@ -121,6 +121,12 @@ const config = {
 							docsPluginId: 'hardware',
 							label: 'Hardware',
 						},
+						{
+							type: 'docSidebar',
+							sidebarId: 'courseSidebar',
+							docsPluginId: 'course',
+							label: 'Progressive Course',
+						},
 					],
 				},
 				{to: '/blog', label: 'Blog', position: 'left'},
@@ -149,6 +155,10 @@ const config = {
 						{
 							label: 'Hardware',
 							to: '/docs/hardware',
+						},
+						{
+							label: 'Progressive Course',
+							to: '/docs/course',
 						},
 					],
 				},
